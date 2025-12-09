@@ -1,19 +1,38 @@
 # ChromBERT-tools: Utilities for ChromBERT-based regulatory analysis
 
-**ChromBERT-tools** is a lightweight companion library built on top of [ChromBERT](https://github.com/TongjiZhanglab/ChromBERT). 
-ChromBERT is a pre-trained deep learning model designed to capture the genome-wide co-association patterns of approximately one thousand transcription regulators, thereby enabling accurate representations of context-specific transcriptional regulatory networks (TRNs)
+*Turn ChromBERT into practical workflows for regulatory genomics.*
 
-ChromBERT-tools provides convenient command-line and Python utilities for computing ChromBERT-based representations of genomic regions, genes, and regulators, inferring transcriptional regulatory networks (TRNs), imputing missing cistromes, and comparing regulatory programs between cell types, conditions, or functional region sets to identify candidate driver regulators.
+> **ChromBERT** is a pre-trained deep learning model designed to capture genome-wide co-association patterns of ~1,000 transcription regulators and to learn context-specific transcriptional regulatory networks (TRNs) [ChromBERT](https://github.com/TongjiZhanglab/ChromBERT).  
+> **ChromBERT-tools** is a lightweight companion library that wraps these capabilities into easy-to-use command-line and Python utilities.
 
+ChromBERT-tools helps you:
 
-This toolkit is intended for users who already have ChromBERT installed and would like to:
+- compute ChromBERT-based representations of genomic regions, genes and regulators;
+- infer transcriptional regulatory networks (TRNs) in general and cell-specific settings;
+- impute missing cistromes for regulators or contexts without direct ChIP-like assays;
+- compare regulatory programs between cell types, conditions or functional region sets and identify candidate driver regulators.
 
-- generate ChromBERT-based embeddings for genomic regions;
-- generate ChromBERT-based embeddings for genes specified by gene symbols or IDs;
-- generate ChromBERT-based embeddings for transcription factors / regulators;
-- generate ChromBERT-based embeddings for cistromes;
-- generate cell-specific ChromBERT-based embeddings;
-- infer cell-specific transcriptional regulatory networks;
-- impute missing cistromes for regulators or contexts that lack direct ChIP-like assays;
-- rank putative driver regulators underlying specific cell-state transitions;
-- identify regulators whose context-specific embeddings best discriminate between two sets of functional regions.
+---
+
+## What you can do with ChromBERT-tools
+
+### 1. General representations (pre-trained ChromBERT)
+
+- **Region embeddings** – generate ChromBERT-based embeddings for genomic regions (e.g. from BED files).  
+- **Gene embeddings** – generate embeddings for genes specified by gene symbols or IDs (via their TSS regions).  
+- **Regulator embeddings** – generate embeddings for transcription factors / regulators.  
+- **Cistrome embeddings** – generate embeddings summarizing cistromes defined by TFs, marks or cell types.
+
+### 2. Cell- and condition-specific representations (fine-tuned ChromBERT)
+
+- **Cell-specific embeddings** – obtain region, gene and regulator embeddings adapted to a given cell type or condition via fast fine-tuning of ChromBERT.  
+- **Cell-specific TRNs** – infer transcriptional regulatory networks over user-specified regions or loci using cell-type-specific chromatin or expression data.
+
+### 3. Cistrome imputation
+
+- **Impute missing cistromes** – predict cistromes for regulators or contexts that lack direct ChIP-like assays using ChromBERT-based models.
+
+### 4. Dynamic analysis and driver regulator discovery
+
+- **Cell-state transitions** – rank putative driver regulators underlying specific transitions between cell types or conditions.  
+- **Functional region contrasts** – identify regulators whose context-specific embeddings best discriminate between two sets of functional regions.
