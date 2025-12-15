@@ -38,6 +38,8 @@
 
 - **Impute missing cistromes** – predict cistromes for regulators or contexts that lack direct ChIP-like assays.  
   - Tool: `chrombert_imputing_cistromes`
+- **Impute missing cistromes** – predict cistromes for regulators or contexts that lack direct ChIP-like assays.  
+  - Tool: `chrombert_imputing_cistromes`
 
 ### 4. Dynamic analysis and driver regulator discovery
 
