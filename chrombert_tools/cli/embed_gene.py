@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 import chrombert
 from chrombert import ChromBERTFTConfig, DatasetConfig
-from .utils import resolve_paths
+from .utils import resolve_paths, overlap_gene_map_region
 
 
 def check_files(file_dicts, args):
@@ -99,34 +99,7 @@ def run(args):
     # ---------- parse requested genes ----------
     focus_genes = _parse_focus_genes(args.gene)
 
-    overlap_genes = []
-    not_found_genes = []
-    gene_to_region_idx = {}  # gene -> np.array of build_region_index
-
-    # gene meta is expected to contain build_region_index column
-    if "build_region_index" not in gene_meta.columns:
-        raise ValueError("gene_meta.tsv must contain 'build_region_index' column.")
-
-    for g in focus_genes:
-        if g.startswith("ensg") or g.startswith("ensmusg"):
-            if g in set(gene_meta["gene_id"].tolist()):
-                overlap_genes.append(g)
-                gene_to_region_idx[g] = gene_meta.loc[gene_meta["gene_id"] == g, "build_region_index"].values
-            else:
-                not_found_genes.append(g)
-        else:
-            if g in set(gene_meta["gene_name"].tolist()):
-                overlap_genes.append(g)
-                gene_to_region_idx[g] = gene_meta.loc[gene_meta["gene_name"] == g, "build_region_index"].values
-            else:
-                not_found_genes.append(g)
-
-    # save matched gene meta for debugging
-    overlap_meta = gene_meta[(gene_meta["gene_id"].isin(overlap_genes)) | (gene_meta["gene_name"].isin(overlap_genes))].copy()
-    overlap_meta.to_csv(f"{odir}/overlap_genes_meta.tsv", sep="\t", index=False)
-
-    if len(gene_to_region_idx) == 0:
-        raise ValueError("No requested genes matched gene_meta. Nothing to embed.")
+    overlap_genes, not_found_genes, gene_to_region_idx = overlap_gene_map_region(gene_meta, focus_genes, odir)
 
     # ---------- gene embeddings ----------
     emb_npy_path = files_dict["region_emb_npy"]

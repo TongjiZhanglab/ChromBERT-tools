@@ -125,7 +125,13 @@ def run(args):
     os.makedirs(odir, exist_ok=True)
 
     files_dict = resolve_paths(args)
-    check_files(files_dict)
+    required_keys=[
+        "chrombert_region_file",
+        "hdf5_file",
+        "pretrain_ckpt",
+        "mtx_mask"
+    ]
+    check_files(files_dict, required_keys=required_keys)
 
     d_odir = f"{odir}/dataset";  os.makedirs(d_odir, exist_ok=True)
     train_odir = f"{odir}/train"; os.makedirs(train_odir, exist_ok=True)

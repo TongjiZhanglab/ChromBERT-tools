@@ -21,7 +21,14 @@ def run(args):
     os.makedirs(args.odir, exist_ok=True)
 
     files_dict = resolve_paths(args)
-    check_files(files_dict)
+    # Only check files needed by embed_cistrome
+    check_files(files_dict, required_keys=[
+        "chrombert_region_file",
+        "meta_file",
+        "hdf5_file",
+        "pretrain_ckpt",
+        "mtx_mask"
+    ])
 
     # overlap region
     overlap_bed = overlap_region(args.region_bed, files_dict["chrombert_region_file"], args.odir)

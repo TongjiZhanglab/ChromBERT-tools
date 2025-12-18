@@ -96,7 +96,14 @@ def run(args):
         raise ValueError("mm10 currently only supports 1kb in this cache layout (adjust if you have more).")
 
     files_dict = resolve_paths(args)
-    check_files(files_dict)
+    required_keys=[
+        "chrombert_region_file",
+        "chrombert_regulator_file",
+        "hdf5_file",
+        "pretrain_ckpt",
+        "mtx_mask"
+    ]
+    check_files(files_dict, required_keys=required_keys)
 
     # Intersect user regions with ChromBERT regions
     overlap_bed = overlap_region(args.region_bed, files_dict["chrombert_region_file"], odir)
@@ -110,7 +117,7 @@ def run(args):
     # Optional: filter regulators for subnetwork plotting
     focus_regs = None
     if args.regulator is not None:
-        focus_regs, _, = overlap_regulator_func(args.regulator, files_dict["chrombert_regulator_file"])
+        focus_regs, _, _= overlap_regulator_func(args.regulator, files_dict["chrombert_regulator_file"])
         if len(focus_regs) == 0:
             print("[WARN] None of the requested regulators were found in ChromBERT regulator list. Will still build full TRN.")
             focus_regs = None

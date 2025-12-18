@@ -4,7 +4,7 @@ import numpy as np
 import subprocess as sp
 import torchmetrics as tm
 import json
-import pybbi as bbi
+import bbi
 import glob
 import torch
 import re
@@ -82,8 +82,22 @@ def resolve_paths(args):
         "meta_file": meta_file,
     }
 
-def check_files(files_dict):
-    missing = [f"{k}: {v}" for k, v in files_dict.items() if not os.path.exists(v)]
+def check_files(files_dict, required_keys=None):
+    """
+    Check if required files exist.
+    
+    Args:
+        files_dict: Dictionary of all file paths
+        required_keys: List of keys to check. If None, check all files.
+    """
+    if required_keys is None:
+        # Check all files in the dict
+        items_to_check = files_dict.items()
+    else:
+        # Only check specified keys
+        items_to_check = [(k, files_dict[k]) for k in required_keys if k in files_dict]
+    
+    missing = [f"{k}: {v}" for k, v in items_to_check if not os.path.exists(v) and v is not None]
     if missing:
         msg = (
             "ChromBERT required file(s) not found:\n  - "
@@ -188,6 +202,37 @@ def overlap_cistrome_func(cistrome: str, chrombert_meta_file: str):
         f"not found: {len(not_overlap)}"
     )
     return overlap, not_overlap, cistrome_gsmid_dict
+
+def overlap_gene_map_region(gene_meta, focus_genes, odir):
+    overlap_genes = []
+    not_found_genes = []
+    gene_to_region_idx = {}  # gene -> np.array of build_region_index
+
+    # gene meta is expected to contain build_region_index column
+    if "build_region_index" not in gene_meta.columns:
+        raise ValueError("gene_meta.tsv must contain 'build_region_index' column.")
+
+    for g in focus_genes:
+        if g.startswith("ensg") or g.startswith("ensmusg"):
+            if g in set(gene_meta["gene_id"].tolist()):
+                overlap_genes.append(g)
+                gene_to_region_idx[g] = gene_meta.loc[gene_meta["gene_id"] == g, "build_region_index"].values
+            else:
+                not_found_genes.append(g)
+        else:
+            if g in set(gene_meta["gene_name"].tolist()):
+                overlap_genes.append(g)
+                gene_to_region_idx[g] = gene_meta.loc[gene_meta["gene_name"] == g, "build_region_index"].values
+            else:
+                not_found_genes.append(g)
+
+    # save matched gene meta for debugging
+    overlap_meta = gene_meta[(gene_meta["gene_id"].isin(overlap_genes)) | (gene_meta["gene_name"].isin(overlap_genes))].copy()
+    overlap_meta.to_csv(f"{odir}/overlap_genes_meta.tsv", sep="\t", index=False)
+
+    if len(gene_to_region_idx) == 0:
+        raise ValueError("No requested genes matched gene_meta. Nothing to embed.")
+    return overlap_genes, not_found_genes, gene_to_region_idx
 
 def chrom_to_int_series(chrom_series: pd.Series, genome: str) -> pd.Series:
     """hg38: 1-22,X=23,Y=24; mm10: 1-19,X=20,Y=21"""
@@ -300,7 +345,7 @@ def model_eval(args, train_odir, data_module, model_config, cal_metrics):
     return model_tuned
 
 
-def model_embedding(train_odir, model_config, ft_ckpt=None, model_tuned=None):
+def model_embedding(train_odir=None, model_config=None, ft_ckpt=None, model_tuned=None):
     if model_tuned is None:
         if ft_ckpt is None:
             ckpts = glob.glob(f"{train_odir}/lightning_logs/**/checkpoints/*.ckpt", recursive=True)

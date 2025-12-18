@@ -24,7 +24,13 @@ def run(args):
         raise ValueError("mm10 currently only supports 1kb in this cache layout (adjust if you have more).")
 
     files_dict = resolve_paths(args)
-    check_files(files_dict)
+    # Only check files needed by embed_regulator
+    check_files(files_dict, required_keys=[
+        "chrombert_region_file",
+        "chrombert_regulator_file", 
+        "hdf5_file",
+        "pretrain_ckpt"
+    ])
 
     overlap_bed = overlap_region(args.region_bed, files_dict["chrombert_region_file"], odir)
 
