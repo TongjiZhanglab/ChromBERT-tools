@@ -154,6 +154,9 @@ def run(args):
 
 
 def embed_region(region, odir, genome, resolution, chrombert_cache_dir,chrombert_region_file, chrombert_region_emb_file):      
+    '''
+    Extract general region embeddings
+    '''
     args = SimpleNamespace(
         region=region,
         odir=odir,

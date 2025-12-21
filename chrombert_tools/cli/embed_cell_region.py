@@ -175,6 +175,9 @@ def run(args):
 def embed_cell_region(region, cell_type_bw, cell_type_peak, ft_ckpt, 
                       odir, genome, resolution, mode, batch_size, 
                       chrombert_cache_dir, chrombert_region_file):
+    '''
+    Extract cell-specific region embeddings
+    '''
     args = SimpleNamespace(
         region=region,
         cell_type_bw=cell_type_bw,

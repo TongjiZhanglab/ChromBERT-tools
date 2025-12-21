@@ -223,6 +223,9 @@ def run(args):
 def embed_cell_regulator(region, regulator, cell_type_bw, cell_type_peak, ft_ckpt, 
                          odir, genome, resolution, mode, batch_size, num_workers, 
                          chrombert_cache_dir):
+    '''
+    Extract cell-specific regulator embeddings on specified regions
+    '''
     args = SimpleNamespace(
         region=region,
         regulator=regulator,

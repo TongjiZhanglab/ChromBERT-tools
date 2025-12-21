@@ -201,6 +201,9 @@ def run(args):
 
 
 def impute_cistrome(region, cistrome, odir, genome, resolution, batch_size, chrombert_cache_dir):
+    '''
+    Impute cistromes on specified regions
+    '''
     args = SimpleNamespace(
         region=region,
         cistrome=cistrome,

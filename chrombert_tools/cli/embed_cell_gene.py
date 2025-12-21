@@ -207,6 +207,9 @@ def run(args):
 
 def embed_cell_gene(gene, cell_type_bw, cell_type_peak, ft_ckpt, odir, genome, resolution,
                     mode, batch_size, chrombert_cache_dir, chrombert_region_file, chrombert_gene_meta):
+    '''
+    Extract cell-specific gene embeddings
+    '''
 
     args = SimpleNamespace(
         gene=gene,

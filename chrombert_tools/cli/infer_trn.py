@@ -205,7 +205,9 @@ def run(args):
 
 def infer_trn(region, regulator, odir, genome, resolution,chrombert_cache_dir,
               batch_size, num_workers, quantile, k_hop):
-
+    '''
+    Infer general TRN (Transition Regulatory Network)
+    '''
     args = SimpleNamespace(
         region=region,
         regulator=regulator,

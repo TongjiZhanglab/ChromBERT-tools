@@ -209,7 +209,9 @@ def run(args):
               help="ChromBERT gene meta TSV. If not provided, try {genome}_{resolution}_gene_meta.tsv, then fallback to hm_1kb_gene_meta.tsv in the cache dir.")
 def embed_gene(gene, odir, genome, resolution, chrombert_cache_dir,
                chrombert_region_file, chrombert_region_emb_file, chrombert_gene_meta):
-
+    '''
+    Extract general gene embeddings
+    '''
     args = SimpleNamespace(
         gene=gene,
         odir=odir,

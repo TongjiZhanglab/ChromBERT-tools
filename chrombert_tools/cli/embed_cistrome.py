@@ -132,6 +132,9 @@ def run(args):
 
 def embed_cistrome(region, cistrome, odir, genome, resolution, batch_size, num_workers,
         chrombert_cache_dir):
+    '''
+    Extract general cistrome embeddings on specified regions
+    '''
 
     args = SimpleNamespace(
         region=region,

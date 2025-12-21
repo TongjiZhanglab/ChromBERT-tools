@@ -236,6 +236,9 @@ def run(args):
 
 def infer_cell_trn(cell_type_bw, cell_type_peak, ft_ckpt, odir, mode, batch_size,
                    chrombert_cache_dir, quantile, k_hop, genome, resolution):
+    '''
+    Infer cell-specific TRN (Transition Regulatory Network)
+    '''
     args = SimpleNamespace(
         cell_type_bw=cell_type_bw,
         cell_type_peak=cell_type_peak,
