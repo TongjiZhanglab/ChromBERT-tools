@@ -51,5 +51,26 @@ To verify the installation, execute the following command:
 chrombert-tools
 ```
 
-## Usage
-For detailed information on usage, please check out the documentation at [chrombert-tools.readthedocs.io](https://chrombert-tools.readthedocs.io/en/latest/).
+## ChromBERT-tools CLI
+For detailed usage, please check the documentation: [chrombert-tools.readthedocs.io](https://chrombert-tools.readthedocs.io/en/latest/).
+
+### General (pre-trained)
+- [embed_cistrome](https://chrombert-tools.readthedocs.io/en/latest/commands/embed_cistrome.html): Extract cistrome embeddings for specified regions  
+- [embed_gene](https://chrombert-tools.readthedocs.io/en/latest/commands/embed_gene.html): Extract gene embeddings  
+- [embed_region](https://chrombert-tools.readthedocs.io/en/latest/commands/embed_region.html): Extract region embeddings for specified regions  
+- [embed_regulator](https://chrombert-tools.readthedocs.io/en/latest/commands/embed_regulator.html): Extract regulator embeddings for specified regions  
+- [infer_trn](https://chrombert-tools.readthedocs.io/en/latest/commands/infer_trn.html): Infer transcriptional regulatory networks (TRNs) on specified regions  
+
+### Cell-type-specific
+- [infer_cell_trn](https://chrombert-tools.readthedocs.io/en/latest/commands/infer_cell_trn.html): Infer cell-type-specific TRNs on specified regions and key regulators  
+- [embed_cell_cistrome](https://chrombert-tools.readthedocs.io/en/latest/commands/embed_cell_cistrome.html): Extract cell-type-specific cistrome embeddings for specified regions  
+- [embed_cell_gene](https://chrombert-tools.readthedocs.io/en/latest/commands/embed_cell_gene.html): Extract cell-type-specific gene embeddings  
+- [embed_cell_region](https://chrombert-tools.readthedocs.io/en/latest/commands/embed_cell_region.html): Extract cell-type-specific region embeddings for specified regions  
+- [embed_cell_regulator](https://chrombert-tools.readthedocs.io/en/latest/commands/embed_cell_regulator.html): Extract cell-type-specific regulator embeddings for specified regions  
+
+### Cistrome imputation
+- [impute_cistrome](https://chrombert-tools.readthedocs.io/en/latest/commands/impute_cistrome.html): Impute cistrome data on specified regions  
+
+### Driver analysis
+- [find_driver_in_dual_region](https://chrombert-tools.readthedocs.io/en/latest/commands/find_driver_in_dual_region.html): Find driver factors in dual-functional regions  
+- [find_driver_in_transition](https://chrombert-tools.readthedocs.io/en/latest/commands/find_driver_in_transition.html): Find driver factors in cell-state transitions  
