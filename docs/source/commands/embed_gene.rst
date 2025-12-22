@@ -15,11 +15,19 @@ Basic Usage
 .. code-block:: bash
 
    chrombert-tools embed_gene \
-     --gene "BRCA1;TP53;MYC;ENSG00000170921" \
+     --gene "gene1;gene2;gene3;gene4" \
      --genome hg38 \
      --resolution 1kb \
      --odir output
 
+If you are use the ChromBERT Singularity image, you can run the command as follows:
+.. code-block:: bash
+
+   singularity exec --nv /path/to/chrombert.sif chrombert-tools embed_gene \
+     --gene "gene1;gene2;gene3;gene4" \
+     --genome hg38 \
+     --resolution 1kb \
+     --odir output
 Parameters
 ==========
 
@@ -27,7 +35,7 @@ Required Parameters
 -------------------
 
 ``--gene``
-   Gene names or Ensembl IDs separated by semicolons. It will be converted to lowercase for better matching
+   Gene names or Ensembl IDs separated by semicolons. It will be converted to lowercase for better matching, such as "BRCA1;TP53;MYC;ENSG00000170921"
 
 Optional Parameters
 -------------------
@@ -45,7 +53,7 @@ Optional Parameters
    Output directory (default: ``./output``)
 
 ``--batch-size``
-   Batch size for training (default: 4)
+   Gene batch size (default: 4)
 
 ``--num-workers``
    Number of dataloader workers (default: 8)
@@ -62,9 +70,10 @@ Output Files
    .. code-block:: python
    
       import pickle
+      # if you specify gene: "BRCA1;TP53;MYC;ENSG00000170921", you can get the embeddings by:
       with open('embs_dict.pkl', 'rb') as f:
           embeddings = pickle.load(f)
-      # embeddings = {'brca1': array([...]), 'tp53': array([...]), ...}
+      # embeddings = {'brca1': array([...]), 'tp53': array([...]), 'myc': array([...]), 'ensg00000170921': array([...]), ...}
 
 ``overlap_gene_meta.tsv``
    Tab-separated file containing metadata for genes found in ChromBERT
@@ -72,17 +81,11 @@ Output Files
    Columns: gene_name, chromosome, start, end, strand, etc.
 
 
-Troubleshooting
+Tips
 ===============
 
-**Gene not found**
+1. **Gene not found**
 
    * Check if the gene identifier is correct
-   * You can find all gene in your chrombert-cache-dir/anno/*_gene_meta.tsv
-
-See Also
-========
-
-* :doc:`overview` - Common parameters and file formats
-* :doc:`../installation` - Installation guide
+   * The gene must be listed in your ``chrombert-cache-dir/anno/*_gene_meta.tsv``
 

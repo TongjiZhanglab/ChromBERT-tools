@@ -17,7 +17,18 @@ Train new model:
 .. code-block:: bash
 
    chrombert-tools embed_cell_gene \
-     --gene "BRCA1;TP53;MYC;ENSG00000170921" \
+     --gene "gene1;gene2;gene3;gene4" \
+     --cell-type-bw cell-type.bigwig \
+     --cell-type-peak cell-type.bed \
+     --genome hg38 \
+     --resolution 1kb \
+     --odir output
+
+If you are use the ChromBERT Singularity image, you can run the command as follows:
+.. code-block:: bash
+
+   singularity exec --nv /path/to/chrombert.sif chrombert-tools embed_cell_gene \
+     --gene "gene1;gene2;gene3;gene4" \
      --cell-type-bw cell-type.bigwig \
      --cell-type-peak cell-type.bed \
      --genome hg38 \
@@ -29,11 +40,22 @@ Use existing checkpoint:
 .. code-block:: bash
 
    chrombert-tools embed_cell_gene \
-     --gene "BRCA1;TP53;MYC;ENSG00000170921" \
+     --gene "gene1;gene2;gene3;gene4" \
      --ft-ckpt /path/to/checkpoint.ckpt \
      --genome hg38 \
      --resolution 1kb \
      --odir output
+
+If you are use the ChromBERT Singularity image, you can run the command as follows:
+.. code-block:: bash
+
+   singularity exec --nv /path/to/chrombert.sif chrombert-tools embed_cell_gene \
+     --gene "gene1;gene2;gene3;gene4" \
+     --ft-ckpt /path/to/checkpoint.ckpt \
+     --genome hg38 \
+     --resolution 1kb \
+     --odir output
+
 
 Parameters
 ==========
@@ -42,8 +64,7 @@ Required Parameters
 -------------------
 
 ``--gene``
-   Gene names or Ensembl IDs separated by semicolons. It will be converted to lowercase for better matching
-
+   Gene names or Ensembl IDs separated by semicolons. It will be converted to lowercase for better matching, such as "BRCA1;TP53;MYC;ENSG00000170921"
 
 ``--cell-type-bw``
    Chromatin accessibility BigWig file, if you not provide finetuned checkpoint, this file must be provided
@@ -73,7 +94,7 @@ Optional Parameters:
    Output directory (default: ``./output``)
 
 ``--batch-size``
-   Batch size for processing (default: 4)
+   Gene Batch size for processing (default: 4)
 
 ``--num-workers``
    Number of dataloader workers (default: 8)
@@ -108,10 +129,10 @@ Embedding Outputs
    .. code-block:: python
    
       import pickle
-      
+      # if you specify gene: "BRCA1;TP53;MYC;ENSG00000170921", you can get the embeddings by:
       with open('cell_specific_gene_embs_dict.pkl', 'rb') as f:
           embeddings = pickle.load(f)
-      # embeddings = {'brca1': array([...]), 'tp53': array([...]), ...}
+      # embeddings = {'brca1': array([...]), 'tp53': array([...]), 'myc': array([...]), 'ensg00000170921': array([...]), ...}
 
 Tips
 ====
@@ -119,8 +140,6 @@ Tips
 1. **Data quality**: 
    
    * Use high-quality ATAC-seq or DNase-seq data
-   * Ensure proper peak calling (MACS2 recommended)
-   * Normalize BigWig files (CPM)
 
 2. **Training mode**: 
    
@@ -132,38 +151,11 @@ Tips
    
    * Save checkpoints for reuse across analyses
 
-
-Troubleshooting
-===============
-
-1. **Training fails or unstable**
-
-   * Check data quality (peaks, BigWig)
-   * Ensure BigWig has sufficient coverage
-   * Use ``--mode fast`` for testing
-
-2. **Low evaluation performance**
-
-   * Check eval_performance.json for metrics
-   * pearsonr < 0.2 indicates poor model quality
-   * May need better quality accessibility data
-   * Consider using general embeddings if cell-specific fails
-
-3. **Memory errors during training**
+4. **Memory errors during training**
 
    * Reduce ``--batch-size``
-   * Use ``--mode fast`` (uses less data)
-   * Close other applications
-   * Use machine with more RAM/GPU memory
-
-4. **Checkpoint file not found**
-
-   * Check exact path to checkpoint file
-   * Look in ``train/try_*/lightning_logs/*/checkpoints/``
-   * Use tab completion or find command
-   * Checkpoint filename includes epoch and step numbers
 
 5. **Gene not found**
 
    * Check if the gene identifier is correct
-   * You can find all gene in your chrombert-cache-dir/anno/*_gene_meta.tsv
+   * The gene must be listed in your ``chrombert-cache-dir/anno/*_gene_meta.tsv``

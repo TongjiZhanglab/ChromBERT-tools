@@ -16,7 +16,17 @@ Basic Usage
 
    chrombert-tools infer_trn \
      --region regions.bed \
-     --regulator "CTCF;NANOG" \
+     --regulator "regulator1;regulator2;regulator3" \
+     --genome hg38 \
+     --resolution 1kb \
+     --odir output
+
+If you are use the ChromBERT Singularity image, you can run the command as follows:
+.. code-block:: bash
+
+   singularity exec --nv /path/to/chrombert.sif chrombert-tools infer_trn \
+     --region regions.bed \
+     --regulator "regulator1;regulator2;regulator3" \
      --genome hg38 \
      --resolution 1kb \
      --odir output
@@ -37,7 +47,7 @@ Optional Parameters
    Show help message and exit
 
 ``--regulator``
-   You want to plot the subnetwork for this regulator
+   You want to infer the TRN for these regulators, regulator names separated by semicolons, it will be converted to lowercase for better matching, such as "CTCF;MYC;TP53"
 
 ``--genome``
    Genome assembly: ``hg38`` (default) or ``mm10``
@@ -49,7 +59,7 @@ Optional Parameters
    Output directory (default: ``./output``)
 
 ``--batch-size``
-   Batch size for training (default: 4)
+   Region batch size (default: 4)
 
 ``--num-workers``
    Number of dataloader workers (default: 8)
@@ -73,7 +83,7 @@ Output Files
    regulator-regulator edges on this regions (filtered by the specified threshold/quantile)
 
 ``subnetwork_regulator_k*.pdf``
-   regulator subnetwork on this regions
+   regulator subnetwork on this regions, if you specify ``--regulator "regulator1;regulator2;regulator3"``, you will get the subnetwork for each regulator
 
 ``overlap_region.bed``
    Regions successfully processed
@@ -82,10 +92,10 @@ Output Files
    Regions not found in ChromBERT
 
 
-Troubleshooting
+Tips
 ===============
 
 **Regulator not found**
 
    * Check if the regulator is correct
-   * You can find all regulator in your chrombert-cache-dir/anno/*_regulator_list.txt
+   * The regulator must be listed in ``chrombert-cache-dir/config/*_regulator_list.txt``

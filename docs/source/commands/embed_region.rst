@@ -20,6 +20,15 @@ Basic Usage
      --resolution 1kb \
      --odir output
 
+If you are use the ChromBERT Singularity image, you can run the command as follows:
+.. code-block:: bash
+
+   singularity exec --nv /path/to/chrombert.sif chrombert-tools embed_region \
+     --region regions.bed \
+     --genome hg38 \
+     --resolution 1kb \
+     --odir output
+
 Parameters
 ==========
 
@@ -45,7 +54,7 @@ Optional Parameters
    Output directory (default: ``./output``)
 
 ``--batch-size``
-   Batch size for training (default: 4)
+   Region batch size (default: 4)
 
 ``--num-workers``
    Number of dataloader workers (default: 8)

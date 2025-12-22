@@ -23,12 +23,31 @@ Train new model:
      --genome hg38 \
      --resolution 1kb \
      --odir output
+If you are use the ChromBERT Singularity image, you can run the command as follows:
+.. code-block:: bash
+
+   singularity exec --nv /path/to/chrombert.sif chrombert-tools embed_cell_region \
+     --region regions.bed \
+     --cell-type-bw cell-type.bigwig \
+     --cell-type-peak cell-type.bed \
+     --genome hg38 \
+     --resolution 1kb \
+     --odir output
 
 Use existing checkpoint:
 
 .. code-block:: bash
 
    chrombert-tools embed_cell_region \
+     --region regions.bed \
+     --ft-ckpt /path/to/checkpoint.ckpt \
+     --genome hg38 \
+     --resolution 1kb \
+     --odir output
+If you are use the ChromBERT Singularity image, you can run the command as follows:
+.. code-block:: bash
+
+   singularity exec --nv /path/to/chrombert.sif chrombert-tools embed_cell_region \
      --region regions.bed \
      --ft-ckpt /path/to/checkpoint.ckpt \
      --genome hg38 \
@@ -117,47 +136,17 @@ Tips
 1. **Data quality**: 
    
    * Use high-quality ATAC-seq or DNase-seq data
-   * Ensure proper peak calling (MACS2 recommended)
-   * Normalize BigWig files (CPM)
 
 2. **Training mode**: 
    
    * Start with ``--mode fast`` for exploration
-   * Use ``--mode full`` for final publication results
+   * Use ``--mode full`` for final results
    * Fast mode is usually sufficient for most analyses
 
 3. **Checkpoint reuse**: 
    
    * Save checkpoints for reuse across analyses
 
-
-Troubleshooting
-===============
-
-1. **Training fails or unstable**
-
-   * Check data quality (peaks, BigWig)
-   * Ensure BigWig has sufficient coverage
-   * Use ``--mode fast`` for testing
-
-2. **Low evaluation performance**
-
-   * Check eval_performance.json for metrics
-   * pearsonr < 0.2 indicates poor model quality
-   * May need better quality accessibility data
-   * Consider using general embeddings if cell-specific fails
-
-3. **Memory errors during training**
+4. **Memory errors during training**
 
    * Reduce ``--batch-size``
-   * Use ``--mode fast`` (uses less data)
-   * Close other applications
-   * Use machine with more RAM/GPU memory
-
-4. **Checkpoint file not found**
-
-   * Check exact path to checkpoint file
-   * Look in ``train/try_*/lightning_logs/*/checkpoints/``
-   * Use tab completion or find command
-   * Checkpoint filename includes epoch and step numbers
-

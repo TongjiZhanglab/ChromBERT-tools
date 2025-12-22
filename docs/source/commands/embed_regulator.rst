@@ -15,12 +15,21 @@ Basic Usage
 .. code-block:: bash
 
    chrombert-tools embed_regulator \
-     --regulator "CTCF;MYC;TP53" \
+     --regulator "regulator1;regulator2;regulator3" \
      --region regions.bed \
      --genome hg38 \
      --resolution 1kb \
      --odir output
 
+If you are use the ChromBERT Singularity image, you can run the command as follows:
+.. code-block:: bash
+
+   singularity exec --nv /path/to/chrombert.sif chrombert-tools embed_regulator \
+     --regulator "regulator1;regulator2;regulator3" \
+     --region regions.bed \
+     --genome hg38 \
+     --resolution 1kb \
+     --odir output
 Parameters
 ==========
 
@@ -28,7 +37,7 @@ Required Parameters
 -------------------
 
 ``--regulator``
-   Regulator names separated by semicolons, it will be converted to lowercase for better matching
+   Regulator names separated by semicolons, it will be converted to lowercase for better matching, such as "CTCF;MYC;TP53"
 
 ``--region``
    BED or CSV file specifying regions of interest or csv file with columns: chr, start, end
@@ -49,7 +58,7 @@ Optional Parameters
    Output directory (default: ``./output``)
 
 ``--batch-size``
-   Batch size for training (default: 4)
+   Region batch size (default: 4)
 
 ``--num-workers``
    Number of dataloader workers (default: 8)
@@ -65,9 +74,11 @@ Output Files
    .. code-block:: python
       import h5py
       with h5py.File('regulator_emb_on_region.hdf5', 'r') as f:
-          ctcf_emb = f['/emb/ctcf'][:]
-          myc_emb = f['/emb/myc'][:]
-          tp53_emb = f['/emb/tp53'][:]
+          # if you specify regulator: "CTCF;MYC;TP53", you can get the embeddings by:
+          emb1 = f['/emb/ctcf'][:]
+          emb2 = f['/emb/myc'][:]
+          emb3 = f['/emb/tp53'][:]
+
 
 ``mean_regulator_emb.pkl``
    Python dictionary containing mean embeddings for each regulator
@@ -75,7 +86,7 @@ Output Files
       import pickle
       with open('mean_regulator_emb.pkl', 'rb') as f:
           mean_embeddings = pickle.load(f)
-      # mean_embeddings = {'ezh2': array([...]), 'myc': array([...]), 'tp53': array([...]), ...}
+      # mean_embeddings = {'ctcf': array([...]), 'myc': array([...]), 'tp53': array([...]), ...}
 
 ``overlap_region.bed``
    Regions successfully processed
@@ -84,10 +95,10 @@ Output Files
    Regions not found in ChromBERT
    
 
-Troubleshooting
+Tips
 ===============
 
 **Regulator not found**
 
    * Check if the regulator is correct
-   * You can find all regulator in your chrombert-cache-dir/anno/*_regulator_list.txt
+   * The regulator must be listed in ``chrombert-cache-dir/config/*_regulator_list.txt``

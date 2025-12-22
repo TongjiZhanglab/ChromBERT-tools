@@ -22,14 +22,6 @@ To get help for a specific command:
 Command Reference
 =================
 
-Overview
---------
-
-.. toctree::
-   :maxdepth: 1
-
-   commands/overview
-
 Embedding Commands
 ------------------
 
@@ -89,20 +81,7 @@ Identify key regulatory factors:
    commands/find_driver_in_dual_region
 
 
-
-Getting Help
-============
-
-If you encounter issues:
-
-1. Check the :doc:`installation` troubleshooting section
-2. Review individual command documentation
-3. Visit the GitHub issues page
-4. Join community discussions
-
 Next Steps
 ==========
 
-* Start with :doc:`commands/overview` for common parameters and file formats
 * Explore specific command documentation for detailed usage
-* Check the :doc:`api` for programmatic access

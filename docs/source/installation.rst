@@ -5,18 +5,12 @@ Installation
 Overview
 ========
 
-ChromBERT-tools is a lightweight GitHub toolkit that exposes core ChromBERT functionality through easy-to-use command-line tools (CLI). To use ChromBERT-tools, you need to install:
+ChromBERT-tools is a lightweight toolkit that exposes core ChromBERT functionality through easy-to-use command-line tools (CLI). To use ChromBERT-tools, you need to install:
 
 1. ChromBERT dependencies
 2. ChromBERT datasets
 3. ChromBERT-tools package
 
-Prerequisites
-=============
-
-* Python 3.9 or higher
-* CUDA-compatible GPU (recommended)
-* Conda or pip package manager
 
 Installing ChromBERT Dependencies
 ==================================
@@ -26,12 +20,7 @@ If you have already installed ChromBERT dependencies, you can skip this step and
 Using Singularity Image (Recommended)
 --------------------------------------
 
-For direct use of these CLI tools, it is recommended to utilize the ChromBERT Singularity image. **These images include almost all packages needed by ChromBERT and ChromBERT-tools**, including:
-
-* flash-attention-2
-* transformers
-* pytorch
-* and other dependencies
+For direct use of these CLI tools, it is recommended to utilize the ChromBERT Singularity image. We provide a pre-built Singularity image available: `chrombert.sif <https://drive.google.com/file/d/1ePmDK6DANSq-zkRgVBTxSBnKBZk-cEzM/view?usp=sharing>`_. **These images include almost all packages needed by ChromBERT and ChromBERT-tools**, including: flash-attention-2, transformers, pytorch, and other dependencies.
 
 Installing Singularity/Apptainer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -57,45 +46,23 @@ Installing from Source
 
 If you want to install from source and use development mode, you can follow the instructions in the `ChromBERT repository <https://github.com/TongjiZhanglab/ChromBERT>`_.
 
-Key dependencies include:
-
-* PyTorch >= 2.0
-* transformers >= 4.30.0
-* flash-attention-2
-* numpy, pandas, scipy
-* h5py, pyBigWig
-* scikit-learn
 
 .. _installing-chrombert-dataset:
 
 Installing ChromBERT Dataset
 =============================
+If you have already installed ChromBERT datasets, you can skip this step and proceed to :ref:`installing-chrombert-tools`.
 
-ChromBERT requires pre-trained models and annotation data files. These files should be downloaded from Hugging Face to ``~/.cache/chrombert/data``.
-
-Supported Genomes and Resolutions
-----------------------------------
-
-You can download datasets for:
+ChromBERT requires pre-trained models and annotation data files. These files should be downloaded from Hugging Face to ``~/.cache/chrombert/data``. Supported Genomes and Resolutions:
 
 * **hg38** (Human): 200bp, 1kb, 2kb, 4kb resolutions
 * **mm10** (Mouse): 1kb resolution
-
-Basic Installation
-------------------
 
 To download the required datasets:
 
 .. code-block:: bash
 
-   chrombert_prepare_env --genome hg38 --resolution 1kb
-
-This command will download:
-
-* Pre-trained ChromBERT model weights
-* Region annotation files
-* TF/regulator metadata
-* HDF5 feature files
+   chrombert_prepare_env --genome <genome> --resolution <resolution>
 
 Using a Hugging Face Mirror
 ----------------------------
@@ -104,26 +71,13 @@ If you're experiencing connectivity issues with Hugging Face, you can use the ``
 
 .. code-block:: bash
 
-   chrombert_prepare_env --genome hg38 --resolution 1kb --hf-endpoint <Hugging Face endpoint>
+   chrombert_prepare_env --genome <genome> --resolution <resolution> --hf-endpoint <Hugging Face endpoint>
 
-Multiple Resolutions
---------------------
-
-To install multiple resolutions, run the command multiple times:
-
-.. code-block:: bash
-
-   chrombert_prepare_env --genome hg38 --resolution 1kb
-   chrombert_prepare_env --genome hg38 --resolution 2kb
-   chrombert_prepare_env --genome mm10 --resolution 1kb
 
 .. _installing-chrombert-tools:
 
 Installing ChromBERT-tools
 ===========================
-
-Installation from GitHub
--------------------------
 
 Clone the repository and install in editable mode:
 
@@ -131,9 +85,7 @@ Clone the repository and install in editable mode:
 
    git clone https://github.com/TongjiZhanglab/ChromBERT-tools.git
    cd ChromBERT-tools
-   pip install -e .
-
-The ``-e`` flag installs the package in editable/development mode, which is useful if you want to modify the code or contribute to the project.
+   pip install .
 
 Verifying Installation
 -----------------------
@@ -145,12 +97,6 @@ To verify that ChromBERT-tools was installed correctly, run:
    chrombert-tools
 
 You should see a list of available commands and their descriptions.
-
-To check the version:
-
-.. code-block:: bash
-
-   python -c "import chrombert_tools; print(chrombert_tools.__version__)"
 
 Using with Singularity
 ======================
@@ -173,24 +119,6 @@ Important Notes
 * Use ``--bind`` to mount host directories into the container
 * Ensure your data paths are accessible within the container
 
-Troubleshooting
-===============
-
-CUDA Out of Memory
-------------------
-
-If you encounter CUDA out of memory errors:
-
-1. Reduce the batch size using ``--batch-size`` option
-
-File Not Found: ChromBERT Data
--------------------------------
-
-If ChromBERT cannot find data files, ensure:
-
-1. You have run ``chrombert_prepare_env`` for your genome and resolution
-2. The cache directory ``~/.cache/chrombert/data`` exists and contains the required files
-3. You can specify a custom cache directory using ``--chrombert-cache-dir``
 
 Next Steps
 ==========

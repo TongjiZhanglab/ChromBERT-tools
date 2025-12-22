@@ -3,16 +3,15 @@ Welcome to ChromBERT-tools Documentation!
 
 **ChromBERT** is a pre-trained deep learning model designed to capture genome-wide co-association patterns of ~1,000 transcription regulators and to learn context-specific transcriptional regulatory networks (TRNs).
 
-**ChromBERT-tools** is a lightweight GitHub toolkit that exposes core ChromBERT functionality through easy-to-use command-line tools (CLI).
+**ChromBERT-tools** is a lightweight toolkit that exposes core ChromBERT functionality through easy-to-use command-line tools (CLI).
 
 Features
 --------
 
 * **Easy-to-use CLI**: Simple command-line interface for common ChromBERT tasks
-* **Flexible**: Works with both hg38 (human) and mm10 (mouse) genomes
+* **Flexible**: Works with hg38 (human) and mm10 (mouse) genomes, and different resolutions
 * **Comprehensive**: Tools for embedding, imputation, inference, and driver factor analysis
 * **Cell-specific**: Support for cell-type specific analysis
-* **Scalable**: Efficient processing of large-scale genomic data
 
 Quick Start
 -----------
@@ -33,11 +32,6 @@ Contents
    installation
    usage
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Reference
-
-   api
 
 Links
 -----
