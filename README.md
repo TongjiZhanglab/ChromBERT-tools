@@ -84,9 +84,9 @@ For detailed usage, please check the documentation: [chrombert-tools.readthedocs
 - [find_driver_in_transition](https://chrombert-tools.readthedocs.io/en/latest/commands/find_driver_in_transition.html): Find driver factors in cell-state transitions  
 
 
-### Python API
+## ChromBERT-tools API
 
-In addition to CLI commands, you can now call ChromBERT-tools directly in Python, Currently supports tasks that do not require fine-tuning:
+In addition to CLI commands, you can now call ChromBERT-tools directly in Python. It currently supports tasks that do not require fine-tuning:
 
 ```python
 from chrombert_tools import embed_gene, embed_region, embed_cistrome, embed_regulator, infer_trn, impute_cistrome
