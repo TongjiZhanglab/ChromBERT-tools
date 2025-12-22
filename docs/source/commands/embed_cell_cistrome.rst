@@ -15,6 +15,7 @@ Basic Usage
 Train new model:
 
 .. code-block:: bash
+   
    chrombert-tools embed_cell_cistrome \
      --cistrome "cistrome1;cistrome2" \
      --region regions.bed \
@@ -25,7 +26,9 @@ Train new model:
      --odir output \
 
 If you are use the ChromBERT Singularity image, you can run the command as follows:
+
 .. code-block:: bash
+
    singularity exec --nv /path/to/chrombert.sif chrombert-tools embed_cell_cistrome \
      --cistrome "cistrome1;cistrome2" \
      --region region.bed \
@@ -38,6 +41,7 @@ If you are use the ChromBERT Singularity image, you can run the command as follo
 Use existing checkpoint:
 
 .. code-block:: bash
+
    chrombert-tools embed_cell_cistrome \
      --cistrome "cistrome1;cistrome2" \
      --region regions.bed \
@@ -47,7 +51,9 @@ Use existing checkpoint:
      --odir output
 
 If you are use the ChromBERT Singularity image, you can run the command as follows:
+
 .. code-block:: bash
+
    singularity exec --nv /path/to/chrombert.sif chrombert-tools embed_cell_cistrome \
      --cistrome "cistrome1;cistrome2" \
      --region region.bed \
@@ -126,7 +132,9 @@ Embedding Outputs
 
 ``cell_specific_cistrome_emb_on_region.hdf5``
    HDF5 file with cell-specific cistrome embeddings per region
+
    .. code-block:: python
+
       import python
       # if you specify cistrome: "CTCF:K562;H3K27ac:K562;GSM1208591", you can get the embeddings by:
       with h5py.File('cell_specific_cistrome_emb_on_region.hdf5', 'r') as f:
@@ -136,6 +144,7 @@ Embedding Outputs
 
 ``cell_specific_mean_cistrome_emb.pkl``
    Mean cell-specific cistrome embeddings
+
    .. code-block:: python
    
       import pickle
