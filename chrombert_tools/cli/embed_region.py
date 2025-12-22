@@ -7,45 +7,8 @@ import chrombert
 from chrombert import ChromBERTFTConfig, DatasetConfig
 import torch
 from tqdm import tqdm
-from .utils import resolve_paths, check_region_file
+from .utils import resolve_paths, check_files, check_region_file
 
-def check_files(file_dicts, args):
-    """Check that required ChromBERT files exist, and give helpful hints if not."""
-    chrombert_region_file = file_dicts["chrombert_region_file"]
-    if not os.path.exists(chrombert_region_file):
-        if args.chrombert_region_file is not None:
-            msg = (
-                f"ChromBERT region BED file not found: {chrombert_region_file}.\n"
-                "Please check the path you passed to --chrombert_region_file "
-                "or provide a correct BED file path."
-            )
-        else:
-            msg = (
-                f"ChromBERT region BED file not found: {chrombert_region_file}.\n"
-                "You can download all required files by running the command "
-                "`chrombert_prepare_env`, or download this BED file directly from:\n"
-                "  https://huggingface.co/TongjiZhanglab/chrombert/"
-                "tree/main/data/hg38_6k_1kb_region.bed"
-            )
-        print(msg)
-        raise FileNotFoundError(msg)
-    
-    emb_npy_path = file_dicts["region_emb_npy"]
-    if not os.path.exists(emb_npy_path):
-        msg = (
-            f"ChromBERT region embedding file not found: {emb_npy_path}, and not directly pick region embedding from cache dir. \n"
-            f"Load model ChromBERT to embed focus regions. \n"
-            f"Check whether downloaded chrombert env dataset")
-        print(msg)
-        hdf5_file = file_dicts['hdf5_file']
-        ckpt_file = file_dicts['pretrain_ckpt']
-        if not os.path.exists(hdf5_file) or not os.path.exists(ckpt_file):
-            msg = (
-                "You can download all required files by running the command "
-                "`chrombert_prepare_env`"
-            )
-            print(msg)
-        
     
 def model_emb_func(args,files_dict,odir):
     # init datamodule
@@ -70,7 +33,7 @@ def model_emb_func(args,files_dict,odir):
     model_emb = model_config.init_model().get_embedding_manager().cuda().bfloat16()
     return ds, dl, model_emb
     
-def run(args):
+def run(args, return_data=False):
 
     odir = args.odir
     os.makedirs(odir, exist_ok=True)
@@ -122,6 +85,9 @@ def run(args):
     print("Overlapping focus regions BED file:", f"{odir}/overlap_region.bed")
     print("Non-overlapping focus regions BED file:", f"{odir}/no_overlap_region.bed")
     print("Overlapping focus region embeddings saved to:", f"{odir}/overlap_region_emb.npy")
+    
+    if return_data:
+        return overlap_emb, overlap_bed
 
 
 @click.command(name="embed_region",

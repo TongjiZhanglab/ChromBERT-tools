@@ -200,7 +200,8 @@ def overlap_regulator_func(regulator: str, chrombert_regulator_file: str):
     print(
         f"Regulator count summary - requested: {len(focus_regulator_list)}, "
         f"matched in ChromBERT: {len(overlap_regulator)}, "
-        f"not found: {len(not_overlap_regulator)}"
+        f"not found: {len(not_overlap_regulator)}, "
+        f"not found regulator: {not_overlap_regulator}"
     )
     return overlap_regulator, not_overlap_regulator, regulator_dict
 
@@ -235,7 +236,8 @@ def overlap_cistrome_func(cistrome: str, chrombert_meta_file: str):
     print(
         f"Cistromes count summary - requested: {len(focus_list)}, "
         f"matched in ChromBERT meta: {len(overlap)}, "
-        f"not found: {len(not_overlap)}"
+        f"not found: {len(not_overlap)}, "
+        f"not found cistromes: {not_overlap}"
     )
     return overlap, not_overlap, cistrome_gsmid_dict
 

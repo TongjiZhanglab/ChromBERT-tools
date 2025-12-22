@@ -83,7 +83,7 @@ def _parse_focus_genes(gene_str: str):
     return focus
 
 
-def run(args):
+def run(args,return_data=False):
     odir = args.odir
     os.makedirs(odir, exist_ok=True)
 
@@ -174,6 +174,9 @@ def run(args):
     print("Region embedding source:", emb_npy_path if os.path.exists(emb_npy_path) else "computed by ChromBERT model")
     print("Gene embeddings saved to:", f"{odir}/embs_dict.pkl")
     print("Matched gene meta saved to:", f"{odir}/overlap_genes_meta.tsv")
+
+    if return_data:
+        return gene_emb_dict
 
 
 @click.command(name="embed_gene", context_settings={"help_option_names": ["-h", "--help"]})

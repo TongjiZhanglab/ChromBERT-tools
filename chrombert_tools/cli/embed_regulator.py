@@ -15,7 +15,7 @@ import pickle
 from .utils import resolve_paths, check_files, check_region_file, chrom_to_int_series, overlap_regulator_func
 
 
-def run(args):
+def run(args, return_data=False):
     odir = args.odir
     os.makedirs(odir, exist_ok=True)
 
@@ -74,6 +74,7 @@ def run(args):
     # save mean regulator emb
     reg_sums = {name: np.zeros(768, dtype=np.float64) for name in regulator_idx_dict}
     
+    reg_emb_dict = {}
     with HDF5Manager(f"{odir}/regulator_emb_on_region.hdf5",
                      region=[(len(ds), 4), np.int64],
                      **shapes) as h5:
@@ -100,10 +101,24 @@ def run(args):
                 }
                 h5.insert(region=region, **embs)
                 
+                # Store for return if needed
+                if return_data:
+                    for k, v in embs.items():
+                        reg_name = k.replace("emb/", "")
+                        if reg_name not in reg_emb_dict:
+                            reg_emb_dict[reg_name] = []
+                        reg_emb_dict[reg_name].append(v)
+                
                 for reg_name, reg_idx in regulator_idx_dict.items():
                     emb = model.get_regulator_embedding(reg_name)
                     emb_np = emb.float().cpu().numpy()            
                     reg_sums[reg_name] += emb_np.sum(axis=0)
+                    
+    # Concatenate collected data if return_data
+    if return_data:
+        for k in reg_emb_dict:
+            reg_emb_dict[k] = np.concatenate(reg_emb_dict[k], axis=0)
+            
     reg_means = {
         reg_name: (sum_vec / total_counts)
         for reg_name, sum_vec in reg_sums.items()
@@ -114,6 +129,9 @@ def run(args):
     print("Finished!")  
     print("Saved mean regulator embeddings to pickle file:", out_pkl)
     print("Saved regulator embeddings to hdf5 file:", f"{odir}/regulator_emb_on_region.hdf5")
+    
+    if return_data:
+        return reg_means, reg_emb_dict, overlap_bed
 
 @click.command(name="embed_regulator", context_settings={"help_option_names": ["-h", "--help"]})
 @click.option("--region", "region",

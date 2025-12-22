@@ -28,27 +28,43 @@ def overlap_cistrome_func(cistrome, chrombert_meta_file):
         reg, ct = cis.split(":")
         ct = ct.lower()
         reg = reg.lower()
+        
+        # Check if regulator exists
         if reg not in meta:
             print(f"regulator: {reg} not found in ChromBERT meta file.")
             not_overlap_cistromes.append(cis)
             continue
-        if not ct.startswith("gsm") and not ct.startswith("enc"):
-            tmp_ct = f'dnase:{ct}'
+        
+        # Determine the actual cistrome ID to use
+        if ct.startswith("gsm") or ct.startswith("enc"):
+            # Direct cistrome ID (e.g., GSM123456, ENCSR456)
+            cistrome_id = ct
         else:
-            tmp_ct = ct  # cistrome
-        if tmp_ct not in meta:
+            # Cell type name, need to look up corresponding DNase data
+            dnase_key = f'dnase:{ct}'
+            if dnase_key not in meta:
+                print(f"celltype: {ct} has no corresponding wild type dnase data in ChromBERT.")
+                not_overlap_cistromes.append(cis)
+                continue
+            cistrome_id = meta[dnase_key]
+        
+        # Final validation: check if the cistrome ID exists in meta
+        if cistrome_id not in meta:
+            print(f"cistrome ID: {cistrome_id} not found in ChromBERT meta file.")
             not_overlap_cistromes.append(cis)
-            print(f"celltype: {ct} has not corresponding wide type dnase prompt/cistrome in ChromBERT.")
             continue
-        else:
-            overlap_cistormes.append(cis)
-            cistrome_gsmid_dict[cis] = f"{reg}:{tmp_ct}"
+        
+        # Success: add to results
+        overlap_cistormes.append(cis)
+        cistrome_gsmid_dict[cis] = f"{reg}:{cistrome_id}"
                     
     print("Note: All cistromes names were converted to lowercase for matching.")
     print(
         f"Cistromes count summary - requested: {len(focus_cistrome_list)}, "
         f"matched in ChromBERT: {len(overlap_cistormes)}, "
-        f"not found: {len(not_overlap_cistromes)}"
+        f"not found: {len(not_overlap_cistromes)}, "
+        f"not found cistromes: {not_overlap_cistromes}"
+        
     )
     print(f"ChromBERT cistromes metas: {chrombert_meta_file.replace('.json', '.tsv')}")
     return overlap_cistormes, not_overlap_cistromes, cistrome_gsmid_dict
@@ -76,7 +92,7 @@ def model_emb_func(args,files_dict,odir):
     model_emb = model_config.init_model().get_embedding_manager().cuda().bfloat16()
     return ds, dl, model_emb
 
-def run(args):
+def run(args, return_data=False):
     odir = args.odir
     os.makedirs(odir, exist_ok=True)
 
@@ -175,6 +191,9 @@ def run(args):
 
     print("Finished imputing cistromes on specific regions.")
     print(f"Results saved to {odir}/results_prob_df.csv")
+    
+    if return_data:
+        return results_pro_df
 
 
 @click.command(name="impute_cistrome", context_settings={"help_option_names": ["-h", "--help"]})

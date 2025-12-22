@@ -19,15 +19,15 @@ from .utils import resolve_paths, check_files
 from .utils import check_region_file, overlap_regulator_func, chrom_to_int_series
 
 
-def plot_regulator_subnetwork(G: nx.Graph, target_reg: str, odir: str, k_hop: int, threshold: float, quantile: float):
+def plot_regulator_subnetwork(G: nx.Graph, target_reg: str, odir: str, k_hop: int, threshold: float, quantile: float, return_fig=False):
     """Plot k-hop ego subnetwork for a given regulator."""
     if target_reg not in G:
         print(f"[WARN] {target_reg} not found in graph (degree == 0)")
-        return
+        return None
 
     subG = nx.ego_graph(G, target_reg, radius=k_hop)
 
-    plt.figure(figsize=(6, 6))
+    fig = plt.figure(figsize=(6, 6))
     pos = nx.spring_layout(subG, seed=42)
 
     node_colors = ["red" if n == target_reg else "lightgray" for n in subG.nodes()]
@@ -48,7 +48,10 @@ def plot_regulator_subnetwork(G: nx.Graph, target_reg: str, odir: str, k_hop: in
     plt.title(f"{target_reg} subnetwork (k={k_hop}, thr={threshold:.3f}, q={quantile:.3f})")
     plt.tight_layout()
     plt.savefig(f"{odir}/subnetwork_{target_reg}_k{k_hop}.pdf")
-    plt.close()
+    
+    if not return_fig:
+        plt.close()
+    return None
 
 
 def build_trn_from_embeddings(embs: np.ndarray, regulators: list[str], odir: str, quantile: float):
@@ -86,10 +89,10 @@ def build_trn_from_embeddings(embs: np.ndarray, regulators: list[str], odir: str
 
     print("Total graph nodes:", G.number_of_nodes())
     print(f"Total graph edges (threshold={threshold:.3f}):", G.number_of_edges())
-    return G, threshold, cos_sim_df
+    return G, threshold, cos_sim_df, df_edges
 
 
-def run(args):
+def run(args, return_data=False):
     odir = args.odir
     os.makedirs(odir, exist_ok=True)
     if args.genome.lower() == "mm10" and args.resolution != "1kb":
@@ -164,17 +167,20 @@ def run(args):
     embs_mean = embs_sum / max(total_counts, 1)
 
     # Build TRN graph by cosine similarity quantile threshold
-    G, threshold, _ = build_trn_from_embeddings(embs_mean, regulators, odir, quantile=args.quantile)
+    G, threshold, _, df_edges = build_trn_from_embeddings(embs_mean, regulators, odir, quantile=args.quantile)
 
     # Optional: plot subnetworks for user-specified regulators
     if focus_regs is not None:
         for reg in focus_regs:
             plot_regulator_subnetwork(
-                G, reg, odir, k_hop=args.k_hop, threshold=threshold, quantile=args.quantile
+                G, reg, odir, k_hop=args.k_hop, threshold=threshold, quantile=args.quantile, 
+                return_fig=return_data
             )
 
     print("Finished!")
     print("Saved outputs to:", odir)
+    if return_data:
+        return df_edges
 
 
 @click.command(name="infer_trn", context_settings={"help_option_names": ["-h", "--help"]})

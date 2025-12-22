@@ -15,7 +15,7 @@ from chrombert import ChromBERTFTConfig, DatasetConfig
 from chrombert.scripts.utils import HDF5Manager
 from .utils import resolve_paths, check_files, check_region_file, chrom_to_int_series, overlap_cistrome_func
 
-def run(args):
+def run(args, return_data=False):
     os.makedirs(args.odir, exist_ok=True)
 
     files_dict = resolve_paths(args)
@@ -71,6 +71,9 @@ def run(args):
     total_counts = 0
     cistrome_sums = {name: np.zeros(768, dtype=np.float64) for name in cistrome_gsmid_dict}
     
+    # Store embeddings if needed for return_data
+    cistrome_emb_dict = {}
+
     out_h5 = f"{args.odir}/cistrome_emb_on_region.hdf5"
     with HDF5Manager(out_h5, region=[(len(ds), 4), np.int64], **shapes) as h5:
         with torch.no_grad():
@@ -96,10 +99,24 @@ def run(args):
                 }
                 h5.insert(region=region, **embs)
                 
+                # Store for return if needed
+                if return_data:
+                    for k, v in embs.items():
+                        cis_name = k.replace("emb/", "")
+                        if cis_name not in cistrome_emb_dict:
+                            cistrome_emb_dict[cis_name] = []
+                        cistrome_emb_dict[cis_name].append(v)
+                
                 for reg_name, reg_idx in cistrome_gsmid_dict.items():
                     emb = model.get_cistrome_embedding(reg_idx)
                     emb_np = emb.float().cpu().numpy()            
                     cistrome_sums[reg_name] += emb_np.sum(axis=0)
+    
+    # Concatenate collected data if return_data
+    if return_data:
+        for k in cistrome_emb_dict:
+            cistrome_emb_dict[k] = np.concatenate(cistrome_emb_dict[k], axis=0)
+            
     cistrome_means = {
         reg_name: (sum_vec / total_counts)
         for reg_name, sum_vec in cistrome_sums.items()
@@ -110,7 +127,10 @@ def run(args):
     print("Finished!")
     print("Saved mean cistrome embeddings to pickle file:", out_pkl)
     print("Saved cistrome embeddings to hdf5 file:", out_h5)
-
+    
+    if return_data:
+        return cistrome_means, cistrome_emb_dict, overlap_bed
+    return None
 
 @click.command(name="embed_cistrome", context_settings={"help_option_names": ["-h", "--help"]})
 @click.option("--region", "region",
