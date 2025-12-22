@@ -22,6 +22,7 @@ Basic Usage
      --odir output
 
 If you are use the ChromBERT Singularity image, you can run the command as follows:
+
 .. code-block:: bash
 
    singularity exec --nv /path/to/chrombert.sif chrombert-tools embed_regulator \
@@ -30,6 +31,7 @@ If you are use the ChromBERT Singularity image, you can run the command as follo
      --genome hg38 \
      --resolution 1kb \
      --odir output
+
 Parameters
 ==========
 
@@ -70,8 +72,10 @@ Output Files
 ============
 
 ``regulator_emb_on_region.hdf5``
-   HDF5 file containing regulator embeddings for each region   
+   HDF5 file containing regulator embeddings for each region  
+
    .. code-block:: python
+
       import h5py
       with h5py.File('regulator_emb_on_region.hdf5', 'r') as f:
           # if you specify regulator: "CTCF;MYC;TP53", you can get the embeddings by:
@@ -82,7 +86,9 @@ Output Files
 
 ``mean_regulator_emb.pkl``
    Python dictionary containing mean embeddings for each regulator
+
    .. code-block:: python
+      
       import pickle
       with open('mean_regulator_emb.pkl', 'rb') as f:
           mean_embeddings = pickle.load(f)

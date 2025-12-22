@@ -25,6 +25,7 @@ Train new model:
      --odir output
 
 If you are use the ChromBERT Singularity image, you can run the command as follows:
+
 .. code-block:: bash
 
    singularity exec --nv /path/to/chrombert.sif chrombert-tools embed_cell_gene \
@@ -47,6 +48,7 @@ Use existing checkpoint:
      --odir output
 
 If you are use the ChromBERT Singularity image, you can run the command as follows:
+
 .. code-block:: bash
 
    singularity exec --nv /path/to/chrombert.sif chrombert-tools embed_cell_gene \

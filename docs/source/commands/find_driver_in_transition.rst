@@ -28,7 +28,8 @@ If you provide the expression data and chromatin accessibility data for this tra
      --odir output
 
 
-If you provide only the chromatin accessibility data for this tranistion: 
+If you provide only the chromatin accessibility data for this tranistion:
+
 .. code-block:: bash
 
    chrombert-tools find_driver_in_transition \
@@ -54,6 +55,7 @@ If you provide only the expression data for this tranistion:
      --odir output
 
 If you are using the ChromBERT Singularity image, you can run the command as follows:
+
 .. code-block:: bash
 
    singularity exec --nv /path/to/chrombert.sif chrombert-tools find_driver_in_transition \

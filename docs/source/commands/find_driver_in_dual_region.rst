@@ -90,10 +90,12 @@ Output Files
    Training outputs for attempt XX with seed YY
    * ``lightning_logs/*/checkpoints/*.ckpt``: Model checkpoint
    * ``eval_performance.json``: Evaluation metrics (pearsonr, spearmanr, etc.)
+
 ``emb/``
    Mean regulator embeddings
    * ``func1_regulator_embs_dict.pkl``: Regulator embeddings on function1 regions
    * ``func2_regulator_embs_dict.pkl``: Regulator embeddings on function2 regions
+   
 ``results/``
    * ``factor_importance_rank.csv``: Driver factors for dual-functional regions (Columns: factors, similarity, rank)
    * ``dual_regulator_subnetwork.pdf``: Dual-functional regulator subnetworks, Generated only if ``--dual-regulator`` is specified

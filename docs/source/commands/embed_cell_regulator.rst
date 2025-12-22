@@ -26,7 +26,9 @@ Train new model:
      --odir output
 
 If you are use the ChromBERT Singularity image, you can run the command as follows:
+
 .. code-block:: bash
+
    singularity exec --nv /path/to/chrombert.sif chrombert-tools embed_cell_regulator \
      --regulator "regulator1;regulator2;regulator3" \
      --region regions.bed \
@@ -51,6 +53,7 @@ Use existing checkpoint:
 If you are use the ChromBERT Singularity image, you can run the command as follows:
 
 .. code-block:: bash
+
    singularity exec --nv /path/to/chrombert.sif chrombert-tools embed_cell_regulator \
      --regulator "regulator1;regulator2;regulator3" \
      --region regions.bed \
@@ -133,8 +136,10 @@ Embedding Outputs
 
 ``cell_specific_regulator_emb_on_region.hdf5``
    HDF5 file with cell-specific regulator embeddings per region
+
    .. code-block:: python
-      import python
+
+      import h5py
       with h5py.File('cell_specific_regulator_emb_on_region.hdf5', 'r') as f:
           ctcf_emb = f['/emb/ctcf'][:]
           myc_emb = f['/emb/myc'][:]
@@ -142,7 +147,9 @@ Embedding Outputs
 
 ``cell_specific_mean_regulator_emb.pkl``
    Mean cell-specific regulator embeddings
+
    .. code-block:: python
+      
       import pickle
       with open('cell_specific_mean_regulator_emb.pkl', 'rb') as f:
           mean_embeddings = pickle.load(f)

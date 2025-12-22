@@ -2,9 +2,6 @@
 Installation
 ============
 
-Overview
-========
-
 ChromBERT-tools is a lightweight toolkit that exposes core ChromBERT functionality through easy-to-use command-line tools (CLI). To use ChromBERT-tools, you need to install:
 
 1. ChromBERT dependencies

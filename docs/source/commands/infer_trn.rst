@@ -22,6 +22,7 @@ Basic Usage
      --odir output
 
 If you are use the ChromBERT Singularity image, you can run the command as follows:
+
 .. code-block:: bash
 
    singularity exec --nv /path/to/chrombert.sif chrombert-tools infer_trn \

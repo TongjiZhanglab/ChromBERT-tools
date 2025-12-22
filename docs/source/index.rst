@@ -13,6 +13,18 @@ Features
 * **Comprehensive**: Tools for embedding, imputation, inference, and driver factor analysis
 * **Cell-specific**: Support for cell-type specific analysis
 
+ChromBERT-tools CLI
+---------------------
+* :doc:`commands/embed_cistrome`: Extract cistrome embeddings on specified regions
+* :doc:`commands/embed_gene`: Extract gene embeddings on specified regions
+* :doc:`commands/embed_region`: Extract region embeddings on specified regions
+* :doc:`commands/embed_regulator`: Extract regulator embeddings on specified regions
+* :doc:`commands/infer_trn`: Infer transcriptional regulatory network (TRN) on specified regions
+* :doc:`commands/infer_cell_trn`: Infer cell-specific transcriptional regulatory network (TRN) on specified regions and cell-specific key regulators
+* :doc:`commands/impute_cistrome`: Impute cistrome data on specified regions
+* :doc:`commands/find_driver_in_dual_region`: Find driver factors in dual-functional regions
+* :doc:`commands/find_driver_in_transition`: Find driver factors in cell-state transition
+
 Quick Start
 -----------
 
