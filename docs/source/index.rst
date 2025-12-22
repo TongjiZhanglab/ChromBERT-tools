@@ -15,15 +15,36 @@ Features
 
 ChromBERT-tools CLI
 ---------------------
-* :doc:`commands/embed_cistrome`: Extract cistrome embeddings on specified regions
-* :doc:`commands/embed_gene`: Extract gene embeddings on specified regions
-* :doc:`commands/embed_region`: Extract region embeddings on specified regions
-* :doc:`commands/embed_regulator`: Extract regulator embeddings on specified regions
-* :doc:`commands/infer_trn`: Infer transcriptional regulatory network (TRN) on specified regions
-* :doc:`commands/infer_cell_trn`: Infer cell-specific transcriptional regulatory network (TRN) on specified regions and cell-specific key regulators
+
+General (pre-trained)
+^^^^^^^^^^^^^^^^^^^^
+
+* :doc:`commands/embed_cistrome`: Extract cistrome embeddings for specified regions
+* :doc:`commands/embed_gene`: Extract gene embeddings
+* :doc:`commands/embed_region`: Extract region embeddings for specified regions
+* :doc:`commands/embed_regulator`: Extract regulator embeddings for specified regions
+* :doc:`commands/infer_trn`: Infer transcriptional regulatory networks (TRNs) on specified regions
+
+
+Cell-type-specific
+^^^^^^^^^^^^^^^^^^
+
+* :doc:`commands/infer_cell_trn`: Infer cell-type-specific TRNs on specified regions and key regulators
+* :doc:`commands/embed_cell_cistrome`: Extract cell-type-specific cistrome embeddings for specified regions
+* :doc:`commands/embed_cell_gene`: Extract cell-type-specific gene embeddings
+* :doc:`commands/embed_cell_region`: Extract cell-type-specific region embeddings for specified regions
+* :doc:`commands/embed_cell_regulator`: Extract cell-type-specific regulator embeddings for specified regions
+
+Cistrome imputation
+^^^^^^^^^^^^^^^^^^^
 * :doc:`commands/impute_cistrome`: Impute cistrome data on specified regions
+
+
+Driver analysis
+^^^^^^^^^^^^^^^
+
 * :doc:`commands/find_driver_in_dual_region`: Find driver factors in dual-functional regions
-* :doc:`commands/find_driver_in_transition`: Find driver factors in cell-state transition
+* :doc:`commands/find_driver_in_transition`: Find driver factors in cell-state transitions
 
 Quick Start
 -----------

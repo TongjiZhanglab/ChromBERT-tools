@@ -2,41 +2,41 @@
 embed_cell_region
 ==================
 
-Extract cell-specific region embeddings.
+Extract cell-type-specific region embeddings.
 
 Overview
 ========
 
-The ``embed_cell_region`` command fine-tunes ChromBERT on cell-type specific accessibility data (if you don't provide finetuned checkpoint, else use the finetuned checkpoint), then extracts gene embeddings using the cell-specific model. This produces embeddings that reflect cell-type specific regulatory patterns.
+The ``embed_cell_region`` command fine-tunes ChromBERT on cell-type-specific accessibility data (BigWig + peaks) and then extracts region embeddings from the fine-tuned model. If a fine-tuned checkpoint is provided, fine-tuning is skipped and embeddings are generated directly from the checkpoint. The resulting embeddings reflect cell-type-specific regulatory patterns.
 
 Basic Usage
 ===========
 
-Train new model:
+Fine-tune a new model:
 
 .. code-block:: bash
 
    chrombert-tools embed_cell_region \
      --region regions.bed \
-     --cell-type-bw cell-type.bigwig \
-     --cell-type-peak cell-type.bed \
+     --cell-type-bw /path/to/cell-type.bigwig \
+     --cell-type-peak /path/to/cell-type.bed \
      --genome hg38 \
      --resolution 1kb \
      --odir output
-     
-If you are use the ChromBERT Singularity image, you can run the command as follows:
+
+If you are using the ChromBERT Singularity image, you can run:
 
 .. code-block:: bash
 
    singularity exec --nv /path/to/chrombert.sif chrombert-tools embed_cell_region \
      --region regions.bed \
-     --cell-type-bw cell-type.bigwig \
-     --cell-type-peak cell-type.bed \
+     --cell-type-bw /path/to/cell-type.bigwig \
+     --cell-type-peak /path/to/cell-type.bed \
      --genome hg38 \
      --resolution 1kb \
      --odir output
 
-Use existing checkpoint:
+Use an existing checkpoint:
 
 .. code-block:: bash
 
@@ -47,7 +47,7 @@ Use existing checkpoint:
      --resolution 1kb \
      --odir output
 
-If you are use the ChromBERT Singularity image, you can run the command as follows:
+If you are using the ChromBERT Singularity image, you can run:
 
 .. code-block:: bash
 
@@ -65,59 +65,59 @@ Required Parameters
 -------------------
 
 ``--region``
-   regions of interest:BED or CSV or TSV file (CSV/TSV need with columns: chrom, start, end)
+   Regions of interest in BED/CSV/TSV format. For CSV/TSV, the file must contain columns: ``chrom``, ``start``, ``end``.
 
 ``--cell-type-bw``
-   Chromatin accessibility BigWig file, if you not provide finetuned checkpoint, this file must be provided
+   Chromatin-accessibility BigWig file (``.bw``/``.bigWig``). Required if ``--ft-ckpt`` is not provided.
 
 ``--cell-type-peak``
-   Peak calling results in BED format, if you not provide finetuned checkpoint, this file must be provided
+   Peak calls in BED or narrowPeak format. Required if ``--ft-ckpt`` is not provided.
 
-Optional Parameters:
+Optional Parameters
 -------------------
 
 ``--help``
-   Show help message and exit
+   Show help message.
 
 ``--ft-ckpt``
-   Path to fine-tuned checkpoint file
+   Path to a fine-tuned checkpoint file. If provided, the tool will skip fine-tuning and use this checkpoint directly to generate region embeddings. In this case, ``--cell-type-bw`` and ``--cell-type-peak`` are not required.
 
 ``--genome``
-   Genome assembly: ``hg38`` (default) or ``mm10``
+   Genome assembly: ``hg38`` (default) or ``mm10``.
 
 ``--resolution``
-   Resolution: ``200bp``, ``1kb`` (default), ``2kb``, or ``4kb``, mouse only supports 1kb resolution
+   Resolution: ``200bp``, ``1kb`` (default), ``2kb``, or ``4kb``. For ``mm10``, only ``1kb`` is supported.
 
 ``--mode``
-   Training mode: ``fast`` (default) or ``full``, if ``fast`` mode is used, only the sampled 20000 regions will be used for training 
+   Training mode: ``fast`` (default) or ``full``. In ``fast`` mode, only 20,000 sampled regions are used for training.
 
 ``--odir``
-   Output directory (default: ``./output``)
+   Output directory (default: ``./output``).
 
 ``--batch-size``
-   Batch size for processing (default: 4)
+   Batch size for processing (default: 4).
 
 ``--num-workers``
-   Number of dataloader workers (default: 8)
+   Number of dataloader workers (default: 8).
 
 ``--chrombert-cache-dir``
-   ChromBERT cache directory (default: ``~/.cache/chrombert/data``), If your cache file in different directory, you can specify the path here
+   ChromBERT cache directory (default: ``~/.cache/chrombert/data``). If your cache is located elsewhere, set this path accordingly.
 
 Output Files
 ============
 
 Training Outputs (if trained)
-------------------------------
+-----------------------------
 
 ``dataset/``
    Training dataset directory
-   
+
    * ``up_region.csv``: Regions more accessible in this cell type
    * ``nochange_region.csv``: Regions with no accessibility change
 
 ``train/try_XX_seed_YY/``
    Training outputs for attempt XX with seed YY
-   
+
    * ``lightning_logs/*/checkpoints/*.ckpt``: Model checkpoint
    * ``eval_performance.json``: Evaluation metrics (pearsonr, spearmanr, etc.)
 
@@ -125,32 +125,31 @@ Embedding Outputs
 -----------------
 
 ``cell_specific_overlap_region_emb.npy``
-   NumPy array of cell-specific region embeddings (shape: [n_regions, 768])
+   NumPy array of cell-type-specific region embeddings (shape: ``[n_regions, 768]``).
 
 ``overlap_region.bed``
-   Regions successfully embedded
+   Regions successfully embedded.
 
 ``no_overlap_region.bed``
-   Regions not found in ChromBERT
-   
+   Regions not found in ChromBERT.
 
 Tips
 ====
 
-1. **Data quality**: 
-   
-   * Use high-quality ATAC-seq or DNase-seq data
+1. **Data quality**
 
-2. **Training mode**: 
-   
-   * Start with ``--mode fast`` for exploration
-   * Use ``--mode full`` for final results
-   * Fast mode is usually sufficient for most analyses
+   * Use high-quality ATAC-seq or DNase-seq data.
 
-3. **Checkpoint reuse**: 
-   
-   * Save checkpoints for reuse across analyses
+2. **Training mode**
+
+   * Start with ``--mode fast`` for exploration.
+   * Use ``--mode full`` for final results.
+   * Fast mode is usually sufficient for most analyses.
+
+3. **Checkpoint reuse**
+
+   * Save checkpoints for reuse across analyses.
 
 4. **Memory errors during training**
 
-   * Reduce ``--batch-size``
+   * Reduce ``--batch-size``.

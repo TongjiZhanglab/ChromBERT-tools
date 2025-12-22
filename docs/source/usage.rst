@@ -2,7 +2,7 @@
 Usage
 =====
 
-Welcome to the ChromBERT-tools usage guide. This section provides comprehensive documentation for all command-line tools.
+Welcome to the ChromBERT-tools usage guide. This section provides documentation for all command-line tools.
 
 Quick Start
 ===========
@@ -19,13 +19,13 @@ To get help for a specific command:
 
    chrombert-tools <command> --help
 
-Command Reference
-=================
+CLI Reference
+=============
 
-Embedding Commands
-------------------
+Embedding CLI
+-------------
 
-Extract general embeddings from pre-trained ChromBERT:
+Extract general embeddings from the pre-trained ChromBERT model:
 
 .. toctree::
    :maxdepth: 1
@@ -35,10 +35,10 @@ Extract general embeddings from pre-trained ChromBERT:
    commands/embed_regulator
    commands/embed_cistrome
 
-Cell-specific Embedding Commands
----------------------------------
+Cell-type-specific Embedding CLI
+--------------------------------
 
-Fine-tune ChromBERT and extract cell-type specific embeddings:
+Fine-tune ChromBERT and extract cell-type-specific embeddings:
 
 .. toctree::
    :maxdepth: 1
@@ -48,18 +48,8 @@ Fine-tune ChromBERT and extract cell-type specific embeddings:
    commands/embed_cell_regulator
    commands/embed_cell_cistrome
 
-Imputation Commands
--------------------
-
-Impute missing cistrome data:
-
-.. toctree::
-   :maxdepth: 1
-
-   commands/impute_cistrome
-
-Inference Commands
-------------------
+TRN Inference CLI
+-----------------
 
 Infer transcriptional regulatory networks:
 
@@ -69,8 +59,18 @@ Infer transcriptional regulatory networks:
    commands/infer_trn
    commands/infer_cell_trn
 
-Driver Factor Analysis
-----------------------
+Imputation CLI
+--------------
+
+Impute missing cistrome data:
+
+.. toctree::
+   :maxdepth: 1
+
+   commands/impute_cistrome
+
+Driver Factor CLI
+-----------------
 
 Identify key regulatory factors:
 
@@ -80,8 +80,7 @@ Identify key regulatory factors:
    commands/find_driver_in_transition
    commands/find_driver_in_dual_region
 
-
 Next Steps
 ==========
 
-* Explore specific command documentation for detailed usage
+* Explore specific command documentation for detailed usage.

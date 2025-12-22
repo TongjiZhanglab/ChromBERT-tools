@@ -2,12 +2,12 @@
 infer_trn
 =========
 
-Infer general transcriptional regulatory network (TRN) on specific rgeions.
+Infer a general transcriptional regulatory network (TRN) on specified regions.
 
 Overview
 ========
 
-The ``infer_trn`` command uses pre-trained ChromBERT's learned regulatory patterns to infer regulator-regulator relationships on specific regions. 
+The ``infer_trn`` command uses the pre-trained ChromBERT model to infer regulator–regulator co-association relationships on user-specified genomic regions.
 
 Basic Usage
 ===========
@@ -21,7 +21,7 @@ Basic Usage
      --resolution 1kb \
      --odir output
 
-If you are use the ChromBERT Singularity image, you can run the command as follows:
+If you are using the ChromBERT Singularity image, you can run:
 
 .. code-block:: bash
 
@@ -39,64 +39,63 @@ Required Parameters
 -------------------
 
 ``--region``
-   regions of interest: BED or CSV or TSV file (CSV/TSV need with columns: chrom, start, end)
+   Regions of interest in BED/CSV/TSV format. For CSV/TSV, the file must contain columns: ``chrom``, ``start``, ``end``.
 
 Optional Parameters
 -------------------
 
 ``--help``
-   Show help message and exit
+   Show help message.
 
 ``--regulator``
-   You want to infer the TRN for these regulators, regulator names separated by semicolons, it will be converted to lowercase for better matching, such as "CTCF;MYC;TP53"
+   Regulators for subnetwork plotting, separated by semicolons (e.g., ``CTCF;MYC;TP53``). Names will be converted to lowercase for matching. If not provided, the full network will still be computed, but subnetworks will not be plotted.
 
 ``--genome``
-   Genome assembly: ``hg38`` (default) or ``mm10``
+   Genome assembly: ``hg38`` (default) or ``mm10``.
 
 ``--resolution``
-   Resolution: ``200bp``, ``1kb`` (default), ``2kb``, or ``4kb``, mouse only supports 1kb resolution
+   Resolution: ``200bp``, ``1kb`` (default), ``2kb``, or ``4kb``. For ``mm10``, only ``1kb`` is supported.
 
 ``--odir``
-   Output directory (default: ``./output``)
+   Output directory (default: ``./output``).
 
 ``--batch-size``
-   Region batch size (default: 4)
+   Region batch size (default: 4).
 
 ``--num-workers``
-   Number of dataloader workers (default: 8)
+   Number of dataloader workers (default: 8).
 
 ``--chrombert-cache-dir``
-   ChromBERT cache directory (default: ``~/.cache/chrombert/data``), If your cache file in different directory, you can specify the path here
+   ChromBERT cache directory (default: ``~/.cache/chrombert/data``). If your cache is located elsewhere, set this path accordingly.
 
 ``--quantile``
-   Quantile threshold for cosine similarity edges (default: 0.99)
+   Quantile threshold for cosine-similarity edges (default: 0.99).
 
-``--k-hot``
-   k-hop radius for subnetwork plotting (default: 1)
+``--k-hop``
+   k-hop radius for subnetwork plotting (default: 1).
 
 Output Files
 ============
 
 ``regulator_cosine_similarity.tsv``
-   regulator-regulator cosine similarity. Higher values indicate greater similarity between the two regulators.
+   Regulator–regulator cosine similarity matrix. Higher values indicate greater similarity between two regulators.
 
-``total_graph_edgh_threshold*_quantile*.tsv ``
-   regulator-regulator edges on this regions (filtered by the specified threshold/quantile)
+``total_graph_edge_threshold*_quantile*.tsv``
+   Regulator–regulator edges on the specified regions, filtered by the chosen threshold/quantile.
 
 ``subnetwork_regulator_k*.pdf``
-   regulator subnetwork on this regions, if you specify ``--regulator "regulator1;regulator2;regulator3"``, you will get the subnetwork for each regulator
+   Regulator subnetworks on the specified regions. If you provide ``--regulator "A;B;C"``, a subnetwork will be generated for each requested regulator.
 
 ``overlap_region.bed``
-   Regions successfully processed
+   Regions that overlap with ChromBERT regions (see ``<chrombert-cache-dir>/config/*region.bed``).
 
 ``no_overlap_region.bed``
-   Regions not found in ChromBERT
-
+   Regions that do not overlap with ChromBERT regions (see ``<chrombert-cache-dir>/config/*region.bed``).
 
 Tips
-===============
+====
 
-**Regulator not found**
+1. **Regulator not found**
 
-   * Check if the regulator is correct
-   * The regulator must be listed in ``chrombert-cache-dir/config/*_regulator_list.txt``
+   * Check whether the regulator identifier is correct.
+   * The regulator must be listed in ``<chrombert-cache-dir>/config/*_regulator_list.txt``.

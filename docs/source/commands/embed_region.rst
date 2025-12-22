@@ -7,7 +7,7 @@ Extract general region embeddings from ChromBERT.
 Overview
 ========
 
-The ``embed_region`` command extracts 768-dimensional embeddings for specified genomic regions using the pre-trained ChromBERT model. These embeddings capture regulatory patterns.
+The ``embed_region`` command extracts 768-dimensional embeddings for user-specified genomic regions using the pre-trained ChromBERT model. These embeddings capture general regulatory patterns.
 
 Basic Usage
 ===========
@@ -20,7 +20,7 @@ Basic Usage
      --resolution 1kb \
      --odir output
 
-If you are use the ChromBERT Singularity image, you can run the command as follows:
+If you are using the ChromBERT Singularity image, you can run:
 
 .. code-block:: bash
 
@@ -37,49 +37,47 @@ Required Parameters
 -------------------
 
 ``--region``
-   regions of interest: BED or CSV or TSV file (CSV/TSV need with columns: chrom, start, end)
+   Regions of interest in BED/CSV/TSV format. For CSV/TSV, the file must contain columns: ``chrom``, ``start``, ``end``.
 
 Optional Parameters
 -------------------
 
 ``--help``
-   Show help message
-   
+   Show help message.
+
 ``--resolution``
-   Resolution: ``200bp``, ``1kb`` (default), ``2kb``, or ``4kb``
+   Resolution: ``200bp``, ``1kb`` (default), ``2kb``, or ``4kb``. For ``mm10``, only ``1kb`` is supported.
 
 ``--genome``
-   Genome assembly: ``hg38`` (default) or ``mm10``
+   Genome assembly: ``hg38`` (default) or ``mm10``.
 
 ``--odir``
-   Output directory (default: ``./output``)
+   Output directory (default: ``./output``).
 
 ``--batch-size``
-   Region batch size (default: 4)
+   Region batch size (default: 4).
 
 ``--num-workers``
-   Number of dataloader workers (default: 8)
+   Number of dataloader workers (default: 8).
 
 ``--chrombert-cache-dir``
-   ChromBERT cache directory (default: ``~/.cache/chrombert/data``), If your cache file in different directory, you can specify the path here
+   ChromBERT cache directory (default: ``~/.cache/chrombert/data``). If your cache is located elsewhere, set this path accordingly.
 
 Output Files
 ============
 
 ``overlap_region_emb.npy``
-   NumPy array containing region embeddings (shape: [n_regions, 768])
-   
+   NumPy array containing region embeddings (shape: ``[n_regions, 768]``).
+
    .. code-block:: python
-   
+
       import numpy as np
-      
-      # Load embeddings
-      embeddings = np.load('overlap_region_emb.npy')
-      print(f"Shape: {embeddings.shape}")  # (n_regions, 768)
+
+      embeddings = np.load("overlap_region_emb.npy")
+      print(embeddings.shape)  # (n_regions, 768)
 
 ``overlap_region.bed``
-   Regions successfully processed
+   Regions that overlap with ChromBERT regions (see ``<chrombert-cache-dir>/config/*region.bed``).
 
 ``no_overlap_region.bed``
-   Regions not found in ChromBERT
-
+   Regions that do not overlap with ChromBERT regions (see ``<chrombert-cache-dir>/config/*region.bed``).

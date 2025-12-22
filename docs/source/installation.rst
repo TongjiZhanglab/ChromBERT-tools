@@ -70,13 +70,19 @@ If you're experiencing connectivity issues with Hugging Face, you can use the ``
 
    chrombert_prepare_env --genome <genome> --resolution <resolution> --hf-endpoint <Hugging Face endpoint>
 
+If you're using the ChromBERT Singularity image, you can run:
+
+.. code-block:: bash
+
+   singularity exec --nv /path/to/chrombert.sif chrombert_prepare_env --genome <genome> --resolution <resolution> --hf-endpoint <Hugging Face endpoint>
+
 
 .. _installing-chrombert-tools:
 
 Installing ChromBERT-tools
 ===========================
 
-Clone the repository and install in editable mode:
+Clone the repository and install:
 
 .. code-block:: bash
 
@@ -94,28 +100,6 @@ To verify that ChromBERT-tools was installed correctly, run:
    chrombert-tools
 
 You should see a list of available commands and their descriptions.
-
-Using with Singularity
-======================
-
-If you're using the Singularity image, you can run ChromBERT-tools commands inside the container:
-
-.. code-block:: bash
-
-   # Run a command inside the container
-   singularity exec --nv /path/to/chrombert.sif chrombert-tools embed-region -h
-   
-   # Bind mount your data directory
-   singularity exec --nv --bind /your/data:/data /path/to/chrombert.sif \
-       chrombert-tools embed-region -h
-
-Important Notes
-^^^^^^^^^^^^^^^
-
-* Use ``--nv`` flag to enable NVIDIA GPU support
-* Use ``--bind`` to mount host directories into the container
-* Ensure your data paths are accessible within the container
-
 
 Next Steps
 ==========

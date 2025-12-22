@@ -2,38 +2,38 @@
 embed_cell_regulator
 =====================
 
-Extract cell-specific regulator embeddings.
+Generate cell-type-specific regulator embeddings.
 
 Overview
 ========
 
-The ``embed_cell_regulator`` command fine-tunes ChromBERT on cell-type specific accessibility data (if you don't provide finetuned checkpoint, else use the finetuned checkpoint), then extracts regulator embeddings using the cell-specific model. This produces embeddings that capture cell-type specific regulatory context.
+The ``embed_cell_regulator`` command fine-tunes ChromBERT on cell-type-specific accessibility data and then generates regulator embeddings from the fine-tuned model. If a fine-tuned checkpoint is provided, fine-tuning is skipped and embeddings are generated directly from the checkpoint.
 
 Basic Usage
 ===========
 
-Train new model:
+Fine-tune a new model:
 
 .. code-block:: bash
 
    chrombert-tools embed_cell_regulator \
      --regulator "regulator1;regulator2;regulator3" \
      --region regions.bed \
-     --cell-type-bw cell-type.bigwig \
-     --cell-type-peak cell-type.bed \
+     --cell-type-bw /path/to/cell-type.bigwig \
+     --cell-type-peak /path/to/cell-type.bed \
      --genome hg38 \
      --resolution 1kb \
      --odir output
 
-If you are use the ChromBERT Singularity image, you can run the command as follows:
+If you are using the ChromBERT Singularity image, you can run:
 
 .. code-block:: bash
 
    singularity exec --nv /path/to/chrombert.sif chrombert-tools embed_cell_regulator \
      --regulator "regulator1;regulator2;regulator3" \
      --region regions.bed \
-     --cell-type-bw cell-type.bigwig \
-     --cell-type-peak cell-type.bed \
+     --cell-type-bw /path/to/cell-type.bigwig \
+     --cell-type-peak /path/to/cell-type.bed \
      --genome hg38 \
      --resolution 1kb \
      --odir output
@@ -43,14 +43,14 @@ Use existing checkpoint:
 .. code-block:: bash
 
    chrombert-tools embed_cell_regulator \
-     --regulator "CTCF;MYC;TP53" \
+     --regulator "regulator1;regulator2;regulator3" \
      --region regions.bed \
      --ft-ckpt /path/to/checkpoint.ckpt \
      --genome hg38 \
      --resolution 1kb \
      --odir output
 
-If you are use the ChromBERT Singularity image, you can run the command as follows:
+If you are using the ChromBERT Singularity image, you can run:
 
 .. code-block:: bash
 
@@ -69,17 +69,17 @@ Required Parameters
 -------------------
 
 ``--regulator``
-   Regulator names separated by semicolons, it will be converted to lowercase for better matching, such as "CTCF;MYC;TP53"
+   Regulator names separated by semicolons (e.g., CTCF;MYC;TP53). Names will be converted to lowercase for matching.
 
 ``--region``
-   regions of interest:BED or CSV or TSV file (CSV/TSV need with columns: chrom, start, end)
+   Regions of interest in BED/CSV/TSV format. For CSV/TSV, the file must contain columns: ``chrom``, ``start``, ``end``.
 
 
 ``--cell-type-bw``
-   Chromatin accessibility BigWig file, if you not provide finetuned checkpoint, this file must be provided
+   Chromatin-accessibility BigWig file (.bw/.bigWig). Required if ``--ft-ckpt`` is not provided.
 
 ``--cell-type-peak``
-   Peak calling results in BED format, if you not provide finetuned checkpoint, this file must be provided
+   Peak calls in BED or narrowPeak format. Required if ``--ft-ckpt`` is not provided.
 
 
 Optional Parameters
@@ -89,16 +89,16 @@ Optional Parameters
    Show help message
 
 ``--ft-ckpt``
-   Path to fine-tuned checkpoint file
+   Path to a fine-tuned checkpoint file. If provided, the tool will skip fine-tuning and use this checkpoint directly to generate regulator embeddings. In this case, ``--cell-type-bw`` and ``--cell-type-peak`` are not required.
 
 ``--genome``
    Genome assembly: ``hg38`` (default) or ``mm10``
 
 ``--resolution``
-   Resolution: ``200bp``, ``1kb`` (default), ``2kb``, or ``4kb``, mouse only supports 1kb resolution
+   Resolution: ``200bp``, ``1kb`` (default), ``2kb``, or ``4kb``. For mm10, only 1kb is supported.
 
 ``--mode``
-   Training mode: ``fast`` (default) or ``full``, if ``fast`` mode is used, only the sampled 20000 regions will be used for training 
+   Training mode: ``fast`` (default) or ``full``. In ``fast`` mode, only 20,000 sampled regions are used for training.
 
 ``--odir``
    Output directory (default: ``./output``)
@@ -110,7 +110,7 @@ Optional Parameters
    Number of dataloader workers (default: 8)
 
 ``--chrombert-cache-dir``
-   ChromBERT cache directory (default: ``~/.cache/chrombert/data``), If your cache file in different directory, you can specify the path here
+   ChromBERT cache directory (default: ``~/.cache/chrombert/data``). If your cache is located elsewhere, set this path accordingly.
 
 
 Output Files
@@ -128,6 +128,7 @@ Training Outputs (if trained)
 
 ``train/try_XX_seed_YY/``
    Training outputs for attempt XX with seed YY
+
    * ``lightning_logs/*/checkpoints/*.ckpt``: Model checkpoint
    * ``eval_performance.json``: Evaluation metrics (pearsonr, spearmanr, etc.)
 
@@ -135,7 +136,7 @@ Embedding Outputs
 -----------------
 
 ``cell_specific_regulator_emb_on_region.hdf5``
-   HDF5 file with cell-specific regulator embeddings per region
+   HDF5 file with cell-type-specific regulator embeddings per region
 
    .. code-block:: python
 
@@ -146,7 +147,7 @@ Embedding Outputs
           tp53_emb = f['/emb/tp53'][:]
 
 ``cell_specific_mean_regulator_emb.pkl``
-   Mean cell-specific regulator embeddings
+   Mean cell-type-specific regulator embeddings
 
    .. code-block:: python
       
@@ -185,5 +186,5 @@ Tips
 5. **Regulator not found**
 
    * Check if the regulator is correct
-   * You can find all regulator in your chrombert-cache-dir/anno/*_regulator_list.txt
+   * You can find all regulators in your <chrombert-cache-dir>/config/*_regulator_list.txt
 

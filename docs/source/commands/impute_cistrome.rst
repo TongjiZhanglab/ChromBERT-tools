@@ -7,7 +7,7 @@ Impute missing cistrome data using ChromBERT.
 Overview
 ========
 
-The ``impute_cistrome`` command uses ChromBERT's learned co-association patterns to impute ChIP-seq for cell types or factors where experimental data is unavailable.
+The ``impute_cistrome`` command uses ChromBERT's learned co-association patterns to impute cistrome signals (e.g., ChIP-seq) for factor–cell pairs where experimental data is unavailable.
 
 Basic Usage
 ===========
@@ -21,7 +21,7 @@ Basic Usage
      --resolution 1kb \
      --odir output
 
-If you are use the ChromBERT Singularity image, you can run the command as follows:
+If you are using the ChromBERT Singularity image, you can run:
 
 .. code-block:: bash
 
@@ -31,7 +31,7 @@ If you are use the ChromBERT Singularity image, you can run the command as follo
      --genome hg38 \
      --resolution 1kb \
      --odir output
-     
+
 Parameters
 ==========
 
@@ -39,52 +39,56 @@ Required Parameters
 -------------------
 
 ``--cistrome``
-   Cistromes to impute in factor:celltype format, use ; to separate multiple cistromes. It will be converted to lowercase for better matching, such as "CTCF:K562;H3K27ac:K562;GSM1208591"
+   Cistromes to impute in factor:cell format, separated by semicolons (e.g., ``CTCF:K562;H3K27ac:K562;BCL11A:GM12878``). Identifiers will be converted to lowercase for matching.
 
 ``--region``
-   Regions to impute (BED or CSV format)
+   Regions to impute in BED/CSV/TSV format. For CSV/TSV, the file must contain columns: ``chrom``, ``start``, ``end``.
 
 Optional Parameters
 -------------------
 
 ``--help``
-   Show help message
+   Show help message.
 
 ``--genome``
-   Genome assembly: ``hg38`` (default) or ``mm10``
+   Genome assembly: ``hg38`` (default) or ``mm10``.
 
 ``--resolution``
-   Resolution: only ``1kb`` (default)
+   Resolution: only ``1kb`` (default).
 
 ``--odir``
-   Output directory (default: ``./output``)
+   Output directory (default: ``./output``).
 
 ``--batch-size``
-   Region batch size (default: 4)
+   Region batch size (default: 4).
 
 ``--num-workers``
-   Number of dataloader workers (default: 8)
+   Number of dataloader workers (default: 8).
 
 ``--chrombert-cache-dir``
-   ChromBERT cache directory (default: ``~/.cache/chrombert/data``), If your cache file in different directory, you can specify the path here
+   ChromBERT cache directory (default: ``~/.cache/chrombert/data``). If your cache is located elsewhere, set this path accordingly.
 
 Output Files
 ============
 
 ``results_prob_df.csv``
-   imputed peak probability
-   
+   Imputed peak probabilities.
+
 ``overlap_region.bed``
-   Regions overlap with chrombert regions (your chrombert-cache-dir/config/*region.bed)
+   Regions that overlap with ChromBERT regions (see ``<chrombert-cache-dir>/config/*region.bed``).
 
 ``no_overlap_region.bed``
-   Regions not overlap with chrombert regions (your chrombert-cache-dir/config/*region.bed)
-
+   Regions that do not overlap with ChromBERT regions (see ``<chrombert-cache-dir>/config/*region.bed``).
 
 Tips
-===============
-ChromBERT requires two types of embeddings for cistrome imputation:
-1. **Cell-type embedding**: Wild-type DNase-seq embedding of the target cell type (stored in ChromBERT's HDF5 data) as the cell-type prompt
-2. **Regulator embedding**: Embedding of the target regulator as the regulator prompt
-* The cell type's DNase-seq data must be listed in ``chrombert-cache-dir/config/*_meta.tsv``
-* The regulator must be listed in ``chrombert-cache-dir/config/*_regulator_list.txt``
+====
+
+ChromBERT cistrome imputation relies on two types of information: (1) regulator embeddings and (2) cell-type accessibility embeddings.
+
+1. **Cell type not found**
+
+   * The DNase-seq (or accessibility) data for the target cell type must be listed in ``<chrombert-cache-dir>/config/*_meta.tsv``.
+
+2. **Regulator not found**
+
+   * The regulator must be listed in ``<chrombert-cache-dir>/config/*_regulator_list.txt``.
