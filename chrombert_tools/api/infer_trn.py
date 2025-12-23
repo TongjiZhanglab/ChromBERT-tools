@@ -12,7 +12,7 @@ def infer_trn(
     odir: str = "./output",
     genome: str = "hg38",
     resolution: str = "1kb",
-    regulators: Optional[Union[str, List[str]]] = None,
+    regulator: Optional[Union[str, List[str]]] = None,
     batch_size: int = 64,
     num_workers: int = 8,
     quantile: float = 0.99,
@@ -21,11 +21,11 @@ def infer_trn(
 ):
     
     # Convert regulator list to semicolon-separated string if needed
-    if regulators is not None:
-        if isinstance(regulators, list):
-            regulator_str = ";".join(regulators)
+    if regulator is not None:
+        if isinstance(regulator, list):
+            regulator_str = ";".join(regulator)
         else:
-            regulator_str = regulators
+            regulator_str = regulator
     else:
         regulator_str = None
     

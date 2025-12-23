@@ -9,7 +9,7 @@ import os
 
 def embed_regulator(
     region: str,
-    regulators: Union[str, List[str]],
+    regulator: Union[str, List[str]],
     odir: str = "./output",
     genome: str = "hg38",
     resolution: str = "1kb",
@@ -19,10 +19,10 @@ def embed_regulator(
 ):
 
     # Convert list to semicolon-separated string if needed
-    if isinstance(regulators, list):
-        regulator_str = ";".join(regulators)
+    if isinstance(regulator, list):
+        regulator_str = ";".join(regulator)
     else:
-        regulator_str = regulators
+        regulator_str = regulator
     
     # Set default cache dir if not provided
     if chrombert_cache_dir is None:

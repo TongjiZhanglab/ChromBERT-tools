@@ -9,7 +9,7 @@ import os
 
 def impute_cistrome(
     region: str,
-    cistromes: Union[str, List[str]],
+    cistrome: Union[str, List[str]],
     odir: str = "./output",
     genome: str = "hg38",
     resolution: str = "1kb",
@@ -18,10 +18,10 @@ def impute_cistrome(
 ):
     
     # Convert list to semicolon-separated string if needed
-    if isinstance(cistromes, list):
-        cistrome_str = ";".join(cistromes)
+    if isinstance(cistrome, list):
+        cistrome_str = ";".join(cistrome)
     else:
-        cistrome_str = cistromes
+        cistrome_str = cistrome
     
     # Set default cache dir if not provided
     if chrombert_cache_dir is None:

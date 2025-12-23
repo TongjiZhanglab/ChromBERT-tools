@@ -10,7 +10,7 @@ from ..cli.embed_gene import run as _cli_run
 
 
 def embed_gene(
-    genes: Union[str, List[str]],
+    gene: Union[str, List[str]],
     odir: str = "./output",
     genome: str = "hg38",
     resolution: str = "1kb",
@@ -21,10 +21,10 @@ def embed_gene(
 ):
     
     # Convert list to semicolon-separated string if needed
-    if isinstance(genes, list):
-        gene_str = ";".join(genes)
+    if isinstance(gene, list):
+        gene_str = ";".join(gene)
     else:
-        gene_str = genes
+        gene_str = gene
     
     # Set default cache dir if not provided
     if chrombert_cache_dir is None:
