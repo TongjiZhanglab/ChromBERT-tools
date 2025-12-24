@@ -241,7 +241,7 @@ def infer_driver_factor_trn(
     )
     dual_regulator_sim_df = factor_rank(embs_pool_func1, embs_pool_func2, regulators, results_odir)
     print("Finished stage 4a: infer driver factors in different regions (top 25):")
-    # print(dual_regulator_sim_df.head(n=25))
+    print(dual_regulator_sim_df.head(n=25))
 
     cos_func1 = cosine_similarity(embs_pool_func1)
     cos_func2 = cosine_similarity(embs_pool_func2)

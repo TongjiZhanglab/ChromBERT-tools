@@ -309,7 +309,7 @@ def run(args):
         print("Merging factor ranks from expression and chromatin accessibility")
         exp_rank_df = pd.read_csv(os.path.join(exp_results_odir, "factor_importance_rank.csv"))
         acc_rank_df = pd.read_csv(os.path.join(acc_results_odir, "factor_importance_rank.csv"))
-        merge_df = pd.merge(exp_rank_df,acc_rank_df,on='factors',how='inner',suffix=['_exp','_acc'])
+        merge_df = pd.merge(exp_rank_df,acc_rank_df,on='factors',how='inner',suffixes=['_exp','_acc'])
         merge_df['total_rank']=((merge_df['rank_exp']+merge_df['rank_acc'])/2).rank().astype(int)
         merge_df = merge_df.sort_values('total_rank').reset_index(drop=True)
         merge_df.to_csv(os.path.join(merge_odir, "factor_importance_rank.csv"), index=False)
@@ -318,7 +318,6 @@ def run(args):
         print(merge_df.head(n=25))
     
     print("Finished all stages!")
-    
     if exp_bool:
         if hasattr(args, 'ft_ckpt_exp') and args.ft_ckpt_exp:
             print(f"Used fine-tuned ChromBERT checkpoint: {args.ft_ckpt_exp}")

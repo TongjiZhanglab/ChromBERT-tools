@@ -185,7 +185,8 @@ def run(args):
     # 4) key regulator
     print("Stage 4: find key regulator")
     cos_sim_df = factor_rank(up_emb, nochange_emb, model_emb.list_regulator, results_odir)
-    print("Finished stage 4")
+    print("Finished stage 4: identify cell-specific key regulators (top 25)")
+    print(cos_sim_df.head(n=25))
 
 
     # 5) TRN
