@@ -62,6 +62,8 @@ ChromBERT-tools supports two ways to run:
 ## ChromBERT-tools CLI
 For detailed usage, please check the documentation: [chrombert-tools.readthedocs.io](https://chrombert-tools.readthedocs.io/en/latest/).
 
+For detailed usage examples, see the Jupyter notebooks in [`examples/cli/`](examples/cli/).
+
 ### General (pre-trained)
 - [embed_cistrome](https://chrombert-tools.readthedocs.io/en/latest/commands/embed_cistrome.html): Extract cistrome embeddings for specified regions  
 - [embed_gene](https://chrombert-tools.readthedocs.io/en/latest/commands/embed_gene.html): Extract gene embeddings  
@@ -92,18 +94,6 @@ In addition to CLI commands, you can now call ChromBERT-tools directly in Python
 from chrombert_tools import embed_gene, embed_region, embed_cistrome, embed_regulator, infer_trn, impute_cistrome
 ```
 
-For detailed examples with full documentation, see the Jupyter notebooks in the `examples/` directory:
-
-- **[embed_api.ipynb](examples/embed_api.ipynb)** - Complete examples for:
-  - `embed_gene()` - Gene embeddings from gene symbols/IDs
-  - `embed_region()` - Region embeddings from BED files
-  - `embed_cistrome()` - Cistrome embeddings on specific regions
-  - `embed_regulator()` - Regulator embeddings on specific regions
-
-- **[infer_trn_api.ipynb](examples/infer_trn_api.ipynb)** - TRN inference example:
-  - `infer_trn()` - Infer transcriptional regulatory networks on specific regions
-
-- **[cistrome_imputation_api.ipynb](examples/cistrome_imputation_api.ipynb)** - Cistrome imputation example:
-  - `impute_cistrome()` - Impute cistrome peak probabilities on genomic regions
+For detailed usage examples, see the Jupyter notebooks in [`examples/api/`](examples/api/).
 
 

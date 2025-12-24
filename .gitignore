@@ -1,2 +1,13 @@
 __pycache__/
 *.pyc
+
+# Output directories (examples)
+examples/*/output*/
+examples/*/tmp/
+examples/*/2.tmp.ipynb
+examples/env_sif/
+examples/data/*.bigwig
+examples/data/*expression.csv
+
+# Python egg info
+chrombert_tools.egg-info/
