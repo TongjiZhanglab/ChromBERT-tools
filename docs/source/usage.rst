@@ -35,14 +35,13 @@ Extract general embeddings from the pre-trained ChromBERT model:
    commands/embed_regulator
    commands/embed_cistrome
 
-Example Notebooks
-~~~~~~~~~~~~~~~~~
+Notebooks
+~~~~~~~~~
 
 .. toctree::
    :maxdepth: 1
 
-   examples/cli/embed
-   examples/cli/singularity_use
+   Extract general embeddings <examples/cli/embed>
 
 
 Cell-type-specific Embedding CLI
@@ -58,13 +57,13 @@ Fine-tune ChromBERT and extract cell-type-specific embeddings:
    commands/embed_cell_regulator
    commands/embed_cell_cistrome
 
-Example Notebooks
-~~~~~~~~~~~~~~~~~
+Notebooks
+~~~~~~~~~
 
 .. toctree::
    :maxdepth: 1
 
-   examples/cli/embed_cell_specific
+   Cell-type-specific Embedding <examples/cli/embed_cell_specific>
 
 TRN Inference CLI
 -----------------
@@ -77,14 +76,14 @@ Infer transcriptional regulatory networks:
    commands/infer_trn
    commands/infer_cell_trn
 
-Example Notebooks
-~~~~~~~~~~~~~~~~~
+Notebooks
+~~~~~~~~~
 
 .. toctree::
    :maxdepth: 1
 
-   examples/cli/infer_trn
-   examples/cli/infer_cell_trn
+   Infer transcriptional regulatory networks (TRNs) <examples/cli/infer_trn>
+   Infer cell-type-specific transcriptional regulatory networks (TRNs) <examples/cli/infer_cell_trn>
 
 Imputation CLI
 --------------
@@ -96,13 +95,13 @@ Impute missing cistrome data:
 
    commands/impute_cistrome
 
-Example Notebooks
-~~~~~~~~~~~~~~~~~
+Notebooks
+~~~~~~~~~
 
 .. toctree::
    :maxdepth: 1
 
-   examples/cli/impute_cistrome
+   Impute cistromes <examples/cli/impute_cistrome>
 
 Driver Factor CLI
 -----------------
@@ -115,14 +114,25 @@ Identify key regulatory factors:
    commands/find_driver_in_transition
    commands/find_driver_in_dual_region
 
-Example Notebooks
-~~~~~~~~~~~~~~~~~
+Notebooks
+~~~~~~~~~
 
 .. toctree::
    :maxdepth: 1
 
-   examples/cli/find_driver_in_transition
-   examples/cli/find_driver_in_dual_region
+   Find driver factors in cell-state transitions <examples/cli/find_driver_in_transition>
+   Find driver factors in dual-functional regions <examples/cli/find_driver_in_dual_region>
+
+General Notebooks
+-----------------
+
+Workflows and examples for running ChromBERT-tools in a Singularity container, including embedding, TRN inference etc.
+
+.. toctree::
+   :maxdepth: 1
+
+   Run ChromBERT-tools with Singularity <examples/cli/singularity_use>
+
 
 API Reference
 =============
@@ -132,42 +142,29 @@ In addition to CLI commands, you can now call ChromBERT-tools directly in Python
 Embedding API
 -------------
 
-Extract general embeddings from the pre-trained ChromBERT model:
-
-Example Notebooks
-~~~~~~~~~~~~~~~~~
-
 .. toctree::
    :maxdepth: 1
 
-   examples/api/embed
+   Extract general embeddings from the pre-trained ChromBERT model <examples/api/embed>
 
 
 TRN Inference API
 -----------------
 
-Infer transcriptional regulatory networks:
-
-Example Notebooks
-~~~~~~~~~~~~~~~~~
-
 .. toctree::
    :maxdepth: 1
 
-   examples/api/infer_trn
+   Infer transcriptional regulatory networks (TRNs) <examples/api/infer_trn>
 
 Imputation API
 --------------
 
-Impute missing cistrome data:
-
-Example Notebooks
-~~~~~~~~~~~~~~~~~
-
 .. toctree::
    :maxdepth: 1
 
-   examples/api/impute_cistrome
+   Impute cistromes <examples/api/impute_cistrome>
+
+
 
 Next Steps
 ==========
