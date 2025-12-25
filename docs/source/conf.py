@@ -1,7 +1,7 @@
 # Configuration file for the Sphinx documentation builder.
 
 # -- Project information
-
+import sphinx_rtd_theme
 project = 'ChromBERT-tools'
 copyright = '2025, Tongji Zhang Lab'
 author = 'Qianqian Chen'
@@ -17,6 +17,10 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
+    'nbsphinx',
+    'nbsphinx_link',
+    "recommonmark",
+    "sphinx.ext.viewcode"
 ]
 
 intersphinx_mapping = {
@@ -30,6 +34,16 @@ templates_path = ['_templates']
 # -- Options for HTML output
 
 html_theme = 'sphinx_rtd_theme'
+html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+
+html_context = {
+    "display_github": True, # Integrate GitHub
+    "github_user": "qianachen", # Username
+    "github_repo": "ChromBERT-tools", # Repo name
+    "github_version": "main/", # Branch
+    "conf_py_path": "/docs/source/", # Path in the repo to conf.py
+}
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
+nbsphinx_execute = "never"
