@@ -27,6 +27,9 @@ Embedding CLI
 
 Extract general embeddings from the pre-trained ChromBERT model:
 
+Commands
+~~~~~~~~~
+
 .. toctree::
    :maxdepth: 1
 
@@ -49,6 +52,9 @@ Cell-type-specific Embedding CLI
 
 Fine-tune ChromBERT and extract cell-type-specific embeddings:
 
+Commands
+~~~~~~~~~
+
 .. toctree::
    :maxdepth: 1
 
@@ -70,6 +76,9 @@ TRN Inference CLI
 
 Infer transcriptional regulatory networks:
 
+Commands
+~~~~~~~~~
+
 .. toctree::
    :maxdepth: 1
 
@@ -90,6 +99,9 @@ Imputation CLI
 
 Impute missing cistrome data:
 
+Commands
+~~~~~~~~~
+
 .. toctree::
    :maxdepth: 1
 
@@ -107,6 +119,9 @@ Driver Factor CLI
 -----------------
 
 Identify key regulatory factors:
+
+Commands
+~~~~~~~~~
 
 .. toctree::
    :maxdepth: 1
