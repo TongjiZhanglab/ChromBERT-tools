@@ -32,12 +32,12 @@ singularity exec --nv /path/to/chrombert.sif chrombert-tools
 Download the required pre-trained model and annotation data files from Hugging Face to `~/.cache/chrombert/data`.
 You can download hg38 (200bp, 1kb, 2kb, 4kb resolution datasets) and mm10 (1kb resolution dataset):
 ```shell
-chrombert_prepare_env --genome hg38 --resolution 1kb
+singularity exec --nv /path/to/chrombert.sif chrombert_prepare_env --genome hg38 --resolution 1kb
 ```
 
 Alternatively, if you're experiencing significant connectivity issues with Hugging Face, you can use the `--hf-endpoint` option to connect to an available mirror:
 ```shell
-chrombert_prepare_env --genome hg38 --resolution 1kb --hf-endpoint <Hugging Face endpoint>
+singularity exec --nv /path/to/chrombert.sif chrombert_prepare_env --genome hg38 --resolution 1kb --hf-endpoint <Hugging Face endpoint>
 ```
 
 ### Installing ChromBERT-tools
