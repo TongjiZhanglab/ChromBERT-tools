@@ -13,7 +13,7 @@ ChromBERT-tools is a lightweight GitHub toolkit that exposes core ChromBERT func
 ### Installing ChromBERT Dependencies
 If you have already installed ChromBERT dependencies, you can skip this step and proceed to [Installing ChromBERT-tools](#installing-chrombert-tools).
 
-For direct use of these CLI tools, it is recommended to utilize the ChromBERT [Singularity image](). **These images include almost all packages needed by ChromBERT and ChromBERT-tools**, including flash-attention-2, transformers, pytorch, etc.
+For direct use of these CLI tools, it is recommended to utilize the ChromBERT [Singularity image](https://drive.google.com/file/d/10Mma4jZsloFP2EMFuXEWXNH5iPHCIn9H/view?usp=drive_link). **These images include almost all packages needed by ChromBERT and ChromBERT-tools**, including flash-attention-2, transformers, pytorch, etc.
 
 If you want to install from source and use development mode, you can follow the instructions in the [ChromBERT](https://github.com/TongjiZhanglab/ChromBERT) repository.
 
