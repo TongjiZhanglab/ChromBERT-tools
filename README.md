@@ -13,14 +13,22 @@ ChromBERT-tools is a lightweight GitHub toolkit that exposes core ChromBERT func
 ### Installing ChromBERT Dependencies
 If you have already installed ChromBERT dependencies, you can skip this step and proceed to [Installing ChromBERT-tools](#installing-chrombert-tools).
 
-For direct use of these CLI tools, it is recommended to utilize the ChromBERT [Singularity image](https://drive.google.com/file/d/10Mma4jZsloFP2EMFuXEWXNH5iPHCIn9H/view?usp=drive_link). **These images include almost all packages needed by ChromBERT and ChromBERT-tools**, including flash-attention-2, transformers, pytorch, etc.
+For direct use of these CLI tools, it is recommended to utilize the ChromBERT [Singularity image](https://drive.google.com/file/d/10Mma4jZsloFP2EMFuXEWXNH5iPHCIn9H/view?usp=drive_link). **This image includes almost all packages needed by ChromBERT and ChromBERT-tools**, including flash-attention-2, transformers, pytorch, etc.
 
-If you want to install from source and use development mode, you can follow the instructions in the [ChromBERT](https://github.com/TongjiZhanglab/ChromBERT) repository.
+**If you want to install from source and use development mode, you can follow the instructions in the [ChromBERT](https://github.com/TongjiZhanglab/ChromBERT) repository.**
 
-To use the Singularity image, you need to install `singularity` (or `Apptainer`) first:
+To use the Singularity image, you need to install `Apptainer` first:
 ```bash
 conda install -c conda-forge apptainer
+apptainer pull chrombert.sif oras://docker.io/chenqianqian515/chrombert:20251225
 ```
+Alternatives (optional download methods):
+- Download the Singularity image directly from the [Google Drive link](https://drive.google.com/file/d/10Mma4jZsloFP2EMFuXEWXNH5iPHCIn9H/view?usp=drive_link) and save it as chrombert.sif.
+- Oras pull
+    ```bash
+    conda install -c conda-forge oras
+    oras pull registry-1.docker.io/chenqianqian515/chrombert:20251225 -o . && mv chrombert_20251225.sif chrombert.sif
+    ```
 
 Then you can test whether it was successfully installed:
 ```bash
@@ -55,8 +63,8 @@ chrombert-tools
 
 ChromBERT-tools supports two ways to run:
 
-1. **Command-line interface (CLI)** — run from a terminal (bash commands)
-2. **Python API** — call functions in Python code
+- **Command-line interface (CLI)** — run from a terminal (bash commands)
+- **Python API** — call functions in Python code
 
 
 ## ChromBERT-tools CLI
