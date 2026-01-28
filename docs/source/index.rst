@@ -16,35 +16,27 @@ Features
 ChromBERT-tools CLI
 ---------------------
 
-General (pre-trained)
-^^^^^^^^^^^^^^^^^^^^^
+Generation of regulation-informed embeddings
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * :doc:`commands/embed_cistrome`: Extract cistrome embeddings for specified regions
 * :doc:`commands/embed_gene`: Extract gene embeddings
 * :doc:`commands/embed_region`: Extract region embeddings for specified regions
 * :doc:`commands/embed_regulator`: Extract regulator embeddings for specified regions
-* :doc:`commands/infer_trn`: Infer transcriptional regulatory networks (TRNs) on specified regions
-
-
-Cell-type-specific
-^^^^^^^^^^^^^^^^^^
-
-* :doc:`commands/infer_cell_trn`: Infer cell-type-specific TRNs on specified regions and key regulators
 * :doc:`commands/embed_cell_cistrome`: Extract cell-type-specific cistrome embeddings for specified regions
 * :doc:`commands/embed_cell_gene`: Extract cell-type-specific gene embeddings
 * :doc:`commands/embed_cell_region`: Extract cell-type-specific region embeddings for specified regions
 * :doc:`commands/embed_cell_regulator`: Extract cell-type-specific regulator embeddings for specified regions
 
-Cistrome imputation
-^^^^^^^^^^^^^^^^^^^
+
+Interpretation of regulation-informed embeddings
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* :doc:`commands/infer_ep`: Infer enhancer-promoter loops on specified regions
+* :doc:`commands/infer_regulator_network`: Infer regulator-regulator networks on specified regions
 * :doc:`commands/impute_cistrome`: Impute cistrome data on specified regions
-
-
-Driver analysis
-^^^^^^^^^^^^^^^
-
-* :doc:`commands/find_driver_in_dual_region`: Find driver factors in dual-functional regions
+* :doc:`commands/infer_cell_key_regulator`: Infer cell-type-specific key regulators on specified regions
 * :doc:`commands/find_driver_in_transition`: Find driver factors in cell-state transitions
+* :doc:`commands/find_context_specific_cofactor`: Find context-specific cofactors in different regions
 
 Quick Start
 -----------

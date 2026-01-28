@@ -1,13 +1,13 @@
-==============
-infer_cell_trn
-==============
+============================
+infer_cell_key_regulator
+============================
 
-Infer cell-type-specific transcriptional regulatory networks (TRNs).
+Infer cell-type-specific regulator-regulator networks.
 
 Overview
 ========
 
-The ``infer_cell_trn`` command fine-tunes ChromBERT on cell-type-specific accessibility data (BigWig + peaks) and then infers a cell-type-specific transcriptional regulatory network (TRN) and key regulators. If a fine-tuned checkpoint is provided, fine-tuning is skipped and the TRN is inferred directly from the checkpoint.
+The ``infer_cell_key_regulator`` command fine-tunes ChromBERT on cell-type-specific accessibility data (BigWig + peaks) and then infers a cell-type-specific key regulators. If a fine-tuned checkpoint is provided, fine-tuning is skipped and the regulator-regulator network is inferred directly from the checkpoint.
 
 Basic Usage
 ===========
@@ -16,7 +16,7 @@ Fine-tune and infer:
 
 .. code-block:: bash
 
-   chrombert-tools infer_cell_trn \
+   chrombert-tools infer_cell_key_regulator \
      --cell-type-bw /path/to/cell_type.bigwig \
      --cell-type-peak /path/to/cell_type.bed \
      --genome hg38 \
@@ -27,7 +27,7 @@ If you are using the ChromBERT Singularity image, you can run:
 
 .. code-block:: bash
 
-   singularity exec --nv /path/to/chrombert.sif chrombert-tools infer_cell_trn \
+   singularity exec --nv /path/to/chrombert.sif chrombert-tools infer_cell_key_regulator \
      --cell-type-bw /path/to/cell_type.bigwig \
      --cell-type-peak /path/to/cell_type.bed \
      --genome hg38 \
@@ -38,7 +38,7 @@ Use an existing checkpoint:
 
 .. code-block:: bash
 
-   chrombert-tools infer_cell_trn \
+   chrombert-tools infer_cell_key_regulator \
      --cell-type-bw /path/to/cell_type.bigwig \
      --cell-type-peak /path/to/cell_type.bed \
      --ft-ckpt /path/to/checkpoint.ckpt \
@@ -50,7 +50,7 @@ If you are using the ChromBERT Singularity image, you can run:
 
 .. code-block:: bash
 
-   singularity exec --nv /path/to/chrombert.sif chrombert-tools infer_cell_trn \
+   singularity exec --nv /path/to/chrombert.sif chrombert-tools infer_cell_key_regulator \
      --cell-type-bw /path/to/cell_type.bigwig \
      --cell-type-peak /path/to/cell_type.bed \
      --ft-ckpt /path/to/checkpoint.ckpt \
@@ -77,7 +77,7 @@ Optional Parameters
    Show help message.
 
 ``--ft-ckpt``
-   Path to a fine-tuned checkpoint file. If provided, the tool will skip fine-tuning and infer the TRN and key regulators directly from this checkpoint.
+   Path to a fine-tuned checkpoint file. If provided, the tool will skip fine-tuning and infer the key regulators directly from this checkpoint.
 
 ``--mode``
    Training mode: ``fast`` (default) or ``full``. In ``fast`` mode, only 20,000 sampled regions are used for training.
@@ -100,12 +100,6 @@ Optional Parameters
 ``--chrombert-cache-dir``
    ChromBERT cache directory (default: ``~/.cache/chrombert/data``). If your cache is located elsewhere, set this path accordingly.
 
-``--quantile``
-   Quantile threshold for cosine-similarity edges (default: 0.99).
-
-``--k-hop``
-   k-hop radius for subnetwork plotting (default: 1).
-
 Output Files
 ============
 
@@ -115,8 +109,8 @@ Training Outputs (if trained)
 ``dataset/``
    Training dataset directory
 
-   * ``up_region.csv``: Regions more accessible in this cell type
-   * ``nochange_region.csv``: Regions with no accessibility change
+   * ``highly_accessible_region.csv``: Regions more accessible in this cell type
+   * ``background_region.csv``: Regions with no accessibility change
 
 ``train/try_XX_seed_YY/``
    Training outputs for attempt XX with seed YY
@@ -127,15 +121,13 @@ Training Outputs (if trained)
 ``emb/``
    Mean regulator embeddings
 
-   * ``up_region_mean_regulator_embs_dict.pkl``: Regulator embeddings on up regions
-   * ``nochange_region_mean_regulator_embs_dict.pkl``: Regulator embeddings on no-change regions
+   * ``up_region_mean_regulator_embs_dict.pkl``: Regulator embeddings on hign accessible regions
+   * ``background_region_mean_regulator_embs_dict.pkl``: Regulator embeddings on background region
 
 ``results/``
    Result files
 
    * ``factor_importance_rank.csv``: Ranked key regulators for this cell type
-   * ``regulator_cosine_similarity.tsv``: Regulator–regulator cosine similarity on up regions (higher values indicate stronger similarity)
-   * ``subnetwork_regulator_k*.pdf``: Key-regulator subnetworks for up regions (generated for different ``k`` values)
 
 Tips
 ====

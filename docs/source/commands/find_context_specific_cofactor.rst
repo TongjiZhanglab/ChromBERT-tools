@@ -1,13 +1,13 @@
 ===========================
-find_driver_in_dual_region
+find_context_specific_cofactor
 ===========================
 
-Identify driver factors distinguishing two sets of genomic regions.
+Identify context-specific cofactors in different regions.
 
 Overview
 ========
 
-The ``find_driver_in_dual_region`` command trains a classifier to distinguish two sets of genomic regions and identifies regulatory factors that contribute most to the classification.
+The ``find_context_specific_cofactor`` command trains a classifier to distinguish two sets of genomic regions, identifies regulatory factors that contribute most to the classification, and prioritizes context-specific cofactors for dual-functional target factors across the two contexts.
 
 A common use case is to compare:
 1) regions that satisfy multiple conditions (e.g., ``region1 AND region2``), and
@@ -20,7 +20,7 @@ Compare ``region1 AND region2`` vs ``region1 ONLY``:
 
 .. code-block:: bash
 
-   chrombert-tools find_driver_in_dual_region \
+   chrombert-tools find_context_specific_cofactor \
      --function1-bed "region1.bed;region2.bed" \
      --function2-bed "region1.bed" \
      --genome hg38 \
@@ -37,7 +37,7 @@ If you are using the ChromBERT Singularity image, you can run:
 
 .. code-block:: bash
 
-   singularity exec --nv /path/to/chrombert.sif chrombert-tools find_driver_in_dual_region \
+   singularity exec --nv /path/to/chrombert.sif chrombert-tools find_context_specific_cofactor \
      --function1-bed "regions1.bed;regions2.bed" \
      --function2-bed "regions1.bed" \
      --genome hg38 \

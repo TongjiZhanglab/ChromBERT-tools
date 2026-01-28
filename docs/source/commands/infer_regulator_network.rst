@@ -1,20 +1,20 @@
-=========
-infer_trn
-=========
+=======================
+infer_regulator_network
+=======================
 
-Infer a general transcriptional regulatory network (TRN) on specified regions.
+Infer a general regulator-regulator network on specified regions.
 
 Overview
 ========
 
-The ``infer_trn`` command uses the pre-trained ChromBERT model to infer regulator–regulator co-association relationships on user-specified genomic regions.
+The ``infer_regulator_network`` command uses the pre-trained ChromBERT model to infer regulator–regulator co-association relationships on user-specified genomic regions.
 
 Basic Usage
 ===========
 
 .. code-block:: bash
 
-   chrombert-tools infer_trn \
+   chrombert-tools infer_regulator_network \
      --region regions.bed \
      --regulator "regulator1;regulator2;regulator3" \
      --genome hg38 \
@@ -25,7 +25,7 @@ If you are using the ChromBERT Singularity image, you can run:
 
 .. code-block:: bash
 
-   singularity exec --nv /path/to/chrombert.sif chrombert-tools infer_trn \
+   singularity exec --nv /path/to/chrombert.sif chrombert-tools infer_regulator_network \
      --region regions.bed \
      --regulator "regulator1;regulator2;regulator3" \
      --genome hg38 \

@@ -22,10 +22,10 @@ To get help for a specific command:
 CLI Reference
 =============
 
-Embedding CLI
--------------
+Generation of regulation-informed embeddings
+--------------------------------------------
 
-Extract general embeddings from the pre-trained ChromBERT model:
+Generate regulation-informed embeddings from the pre-trained ChromBERT model or fine-tuned ChromBERT model:
 
 Commands
 ~~~~~~~~~
@@ -37,27 +37,6 @@ Commands
    commands/embed_region
    commands/embed_regulator
    commands/embed_cistrome
-
-Notebooks
-~~~~~~~~~
-
-.. toctree::
-   :maxdepth: 1
-
-   Extract general embeddings <examples/cli/embed>
-
-
-Cell-type-specific Embedding CLI
---------------------------------
-
-Fine-tune ChromBERT and extract cell-type-specific embeddings:
-
-Commands
-~~~~~~~~~
-
-.. toctree::
-   :maxdepth: 1
-
    commands/embed_cell_gene
    commands/embed_cell_region
    commands/embed_cell_regulator
@@ -69,35 +48,14 @@ Notebooks
 .. toctree::
    :maxdepth: 1
 
+   Extract general embeddings <examples/cli/embed>
    Cell-type-specific Embedding <examples/cli/embed_cell_specific>
 
-TRN Inference CLI
------------------
 
-Infer transcriptional regulatory networks:
+Interpretation of regulation-informed embeddings
+------------------------------------------------
 
-Commands
-~~~~~~~~~
-
-.. toctree::
-   :maxdepth: 1
-
-   commands/infer_trn
-   commands/infer_cell_trn
-
-Notebooks
-~~~~~~~~~
-
-.. toctree::
-   :maxdepth: 1
-
-   Infer transcriptional regulatory networks (TRNs) <examples/cli/infer_trn>
-   Infer cell-type-specific transcriptional regulatory networks (TRNs) <examples/cli/infer_cell_trn>
-
-Imputation CLI
---------------
-
-Impute missing cistrome data:
+Interpret regulation-informed embeddings:
 
 Commands
 ~~~~~~~~~
@@ -105,29 +63,12 @@ Commands
 .. toctree::
    :maxdepth: 1
 
+   commands/infer_ep
+   commands/infer_regulator_network
    commands/impute_cistrome
-
-Notebooks
-~~~~~~~~~
-
-.. toctree::
-   :maxdepth: 1
-
-   Impute cistromes <examples/cli/impute_cistrome>
-
-Driver Factor CLI
------------------
-
-Identify key regulatory factors:
-
-Commands
-~~~~~~~~~
-
-.. toctree::
-   :maxdepth: 1
-
+   commands/infer_cell_key_regulator
    commands/find_driver_in_transition
-   commands/find_driver_in_dual_region
+   commands/find_context_specific_cofactor
 
 Notebooks
 ~~~~~~~~~
@@ -135,13 +76,17 @@ Notebooks
 .. toctree::
    :maxdepth: 1
 
+   Infer regulator-regulator networks <examples/cli/infer_regulator_network>
+   Infer cell-type-specific regulator-regulator networks <examples/cli/infer_cell_regulator_network>
+   Infer enhancer-promoter loops <examples/cli/infer_ep>
+   Impute cistromes <examples/cli/impute_cistrome>
    Find driver factors in cell-state transitions <examples/cli/find_driver_in_transition>
-   Find driver factors in dual-functional regions <examples/cli/find_driver_in_dual_region>
+   Find context-specific cofactors in different regions <examples/cli/find_context_specific_cofactor>
 
 General Notebooks
 -----------------
 
-Workflows and examples for running ChromBERT-tools in a Singularity container, including embedding, TRN inference etc.
+Workflows and examples for running ChromBERT-tools in a Singularity container, including embedding, regulator-regulator network inference etc.
 
 .. toctree::
    :maxdepth: 1
@@ -154,8 +99,8 @@ API Reference
 
 In addition to CLI commands, you can now call ChromBERT-tools directly in Python. It currently supports tasks that do not require fine-tuning:
 
-Embedding API
--------------
+Generation of regulation-informed embeddings API
+-----------------------------------------------
 
 .. toctree::
    :maxdepth: 1
@@ -163,23 +108,15 @@ Embedding API
    Extract general embeddings from the pre-trained ChromBERT model <examples/api/embed>
 
 
-TRN Inference API
------------------
+Interpretation of regulation-informed embeddings API
+-----------------------------------------
 
 .. toctree::
    :maxdepth: 1
 
-   Infer transcriptional regulatory networks (TRNs) <examples/api/infer_trn>
-
-Imputation API
---------------
-
-.. toctree::
-   :maxdepth: 1
-
+   Infer regulator-regulator networks <examples/api/infer_regulator_network>
+   Infer enhancer-promoter loops <examples/api/infer_ep>
    Impute cistromes <examples/api/impute_cistrome>
-
-
 
 Next Steps
 ==========
