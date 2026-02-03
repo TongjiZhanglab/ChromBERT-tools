@@ -2,7 +2,7 @@
 
 > **ChromBERT** is a pre-trained deep learning model designed to capture genome-wide co-association patterns of ~1,000 transcription regulators and to learn context-specific transcriptional regulatory networks (TRNs) [ChromBERT](https://github.com/TongjiZhanglab/ChromBERT).  
 > **ChromBERT-tools** is a lightweight toolkit designed to generate and interpret regulation-informed embeddings derived from ChromBERT, providing user-friendly command-line interfaces (CLIs) and Python APIs.
-
+![ChromBERT-tools Framework](docs/_static/figure1.png "Framework")
 
 ---
 
