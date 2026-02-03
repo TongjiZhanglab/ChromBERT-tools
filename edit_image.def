@@ -1,0 +1,30 @@
+# edit_image.def is an Apptainer/Singularity definition file (recipe) that rebuilds the image and installs additional packages.
+
+Bootstrap: localimage
+From: /path/to/chrombert.sif # the original Singularity image, you must to replace it with the actual path to the original image.
+
+%files
+    . /opt/ChromBERT-tools/ # copy the current build directory (host) into /opt/ChromBERT-tools/ in the image
+
+%post
+    echo ">>> Setting up Python environment"
+
+    # If your base image uses conda, adapt as needed
+    if [ -f /opt/miniconda/etc/profile.d/conda.sh ]; then
+        . /opt/miniconda/etc/profile.d/conda.sh
+        conda activate base || true
+    fi
+
+    echo ">>> Installing ChromBERT-tools from local repo"
+    cd /opt/ChromBERT-tools
+
+    # If you want a normal install:
+    python -m pip install --no-cache-dir .
+    rm -rf /opt/ChromBERT-tools/chrombert_tools.egg-info
+    rm -rf /opt/ChromBERT-tools/examples/*
+    echo ">>> Done installing chrombert-tools"
+
+    # Optional: install extra packages
+    # echo ">>> Installing extra packages"
+    # python -m pip install --no-cache-dir <packages>
+    # echo ">>> Done installing extra packages"

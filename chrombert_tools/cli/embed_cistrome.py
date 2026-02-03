@@ -126,7 +126,7 @@ def run(args, return_data=False):
         pickle.dump(cistrome_means, f)
     print("Finished!")
     print("Saved mean cistrome embeddings to pickle file:", out_pkl)
-    print("Saved cistrome embeddings to hdf5 file:", out_h5)
+    print("Saved region-aware cistrome embeddings to hdf5 file:", out_h5)
     
     if return_data:
         return cistrome_means, cistrome_emb_dict, overlap_bed

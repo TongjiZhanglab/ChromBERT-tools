@@ -1,4 +1,4 @@
-# ChromBERT-tools: a toolkit for ChromBERT-based regulatory analysis
+# ChromBERT-tools: A versatile toolkit for context-specific embedding of transcription regulators across different cell types
 
 > **ChromBERT** is a pre-trained deep learning model designed to capture genome-wide co-association patterns of ~1,000 transcription regulators and to learn context-specific transcriptional regulatory networks (TRNs) [ChromBERT](https://github.com/TongjiZhanglab/ChromBERT).  
 > **ChromBERT-tools** is a lightweight toolkit designed to generate and interpret regulation-informed embeddings derived from ChromBERT, providing user-friendly command-line interfaces (CLIs) and Python APIs.
@@ -7,55 +7,51 @@
 ---
 
 ## Installation
-ChromBERT-tools is a lightweight GitHub toolkit that exposes core ChromBERT functionality. You need to install the ChromBERT environment including ChromBERT dependencies and datasets.
+ChromBERT-tools depends on the ChromBERT environment (packages + pre-trained models files). The official Singularity image is the easiest option and it already includes ChromBERT-tools.
 
-### Installing ChromBERT Dependencies
-If you have already installed ChromBERT dependencies, you can skip this step and proceed to [Installing ChromBERT-tools](#installing-chrombert-tools).
-
-For direct use of these CLI tools, it is recommended to utilize the ChromBERT [Singularity image](https://drive.google.com/file/d/10Mma4jZsloFP2EMFuXEWXNH5iPHCIn9H/view?usp=drive_link). **This image includes almost all packages needed by ChromBERT and ChromBERT-tools**, including flash-attention-2, transformers, pytorch, etc.
-
-**If you want to install from source and use development mode, you can follow the instructions in the [ChromBERT](https://github.com/TongjiZhanglab/ChromBERT) repository.**
-
-To use the Singularity image, you need to install `Apptainer` first:
+### 1) ChromBERT environment (recommended)
+Install Apptainer and pull the image:
 ```bash
 conda install -c conda-forge apptainer
-apptainer pull chrombert.sif oras://docker.io/chenqianqian515/chrombert:20251225
+apptainer pull chrombert.sif oras://docker.io/chenqianqian515/chrombert:20260202
 ```
-Alternatives (optional download methods):
-- Download the Singularity image directly from the [Google Drive link](https://drive.google.com/file/d/10Mma4jZsloFP2EMFuXEWXNH5iPHCIn9H/view?usp=drive_link) and save it as chrombert.sif.
-- Oras pull
-    ```bash
-    conda install -c conda-forge oras
-    oras pull registry-1.docker.io/chenqianqian515/chrombert:20251225 -o . && mv chrombert_20251225.sif chrombert.sif
-    ```
+Optional: download the image from the [Google Drive link](https://drive.google.com/file/d/14I-BQxrBNPwdZn-TKaG0Z8lpNiJlUd1f/view?usp=drive_link).
 
-Then you can test whether it was successfully installed:
+Quick check:
 ```bash
-singularity exec --nv /path/to/chrombert.sif python -c "import chrombert; print('hello chrombert')"
-singularity exec --nv /path/to/chrombert.sif chrombert-tools
+singularity exec chrombert.sif python -c "import chrombert; print('hello chrombert')" # need some time
+singularity exec chrombert.sif chrombert-tools
 ```
 
-### Installing ChromBERT Dataset
-Download the required pre-trained model and annotation data files from Hugging Face to `~/.cache/chrombert/data`.
-You can download hg38 (200bp, 1kb, 2kb, 4kb resolution datasets) and mm10 (1kb resolution dataset):
+### 2) ChromBERT pre-trained models files
+Download models and annotations to `~/.cache/chrombert/data`:
 ```shell
-singularity exec --nv /path/to/chrombert.sif chrombert_prepare_env --genome hg38 --resolution 1kb
+singularity exec chrombert.sif chrombert_prepare_env --genome hg38 --resolution 1kb
 ```
-
-Alternatively, if you're experiencing significant connectivity issues with Hugging Face, you can use the `--hf-endpoint` option to connect to an available mirror:
+If Hugging Face is slow, add `--hf-endpoint <mirror>`:
 ```shell
-singularity exec --nv /path/to/chrombert.sif chrombert_prepare_env --genome hg38 --resolution 1kb --hf-endpoint <Hugging Face endpoint>
+singularity exec chrombert.sif chrombert_prepare_env --genome hg38 --resolution 1kb --hf-endpoint <Hugging Face endpoint>
 ```
 
-### Installing ChromBERT-tools
+### 3) Install ChromBERT-tools
 ```bash
 git clone https://github.com/TongjiZhanglab/ChromBERT-tools.git
 cd ChromBERT-tools
 pip install -e .
 ```
-To verify the installation, execute the following command:
+Verify:
 ```bash
 chrombert-tools
+```
+
+### 4) Update the Singularity image with the latest ChromBERT-tools (optional)
+To add new packages or update existing ones, edit edit_image.def and rebuild a new image.
+Here we update ChromBERT-tools as an example:
+
+```bash
+git clone https://github.com/TongjiZhanglab/ChromBERT-tools.git
+cd ChromBERT-tools
+apptainer build <new_image_name>.sif edit_image.def
 ```
 
 ## Usage
@@ -70,6 +66,11 @@ ChromBERT-tools supports two ways to run:
 For detailed usage, please check the documentation: [chrombert-tools.readthedocs.io](https://chrombert-tools.readthedocs.io/en/latest/).
 
 For detailed usage examples, see the Jupyter notebooks in [`examples/cli/`](examples/cli/).
+Quick check:
+```bash
+cd examples/cli/
+singularity exec --nv chrombert.sif jupyter-notebook # start Jupyter Notebook with GPU support
+```
 
 ### Generation of regulation-informed embeddings
 - [embed_cistrome](https://chrombert-tools.readthedocs.io/en/latest/commands/embed_cistrome.html): Extract cistrome embeddings for specified regions  
@@ -85,10 +86,12 @@ For detailed usage examples, see the Jupyter notebooks in [`examples/cli/`](exam
 ### Interpretation of regulation-informed embeddings
 - [infer_ep](https://chrombert-tools.readthedocs.io/en/latest/commands/infer_ep.html): Infer enhancer-promoter loops
 - [infer_regulator_network](https://chrombert-tools.readthedocs.io/en/latest/commands/infer_regulator_network.html): Infer regulator-regulator networks on specified regions  
-- [impute_cistrome](https://chrombert-tools.readthedocs.io/en/latest/commands/impute_cistrome.html): Impute cistrome data on specified regions 
 - [infer_cell_key_regulator](https://chrombert-tools.readthedocs.io/en/latest/commands/infer_cell_key_regulator.html): Infer cell-type-specific key regulators
 - [find_driver_in_transition](https://chrombert-tools.readthedocs.io/en/latest/commands/find_driver_in_transition.html): Find driver factors in cell-state transitions
 - [find_context_specific_cofactor](https://chrombert-tools.readthedocs.io/en/latest/commands/find_context_specific_cofactor.html): Find context-specific cofactors in different regions  
+
+### Cistrome imputation
+- [impute_cistrome](https://chrombert-tools.readthedocs.io/en/latest/commands/impute_cistrome.html): Impute cistrome data on specified regions 
 
 
 ## ChromBERT-tools API

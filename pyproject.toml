@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "chrombert-tools"
-version = "1.0.0"
+version = "1.0.1"
 description = "ChromBERT-tools: A lightweight GitHub toolkit that exposes core ChromBERT functionality through easy-to-use command-line tools (CLI)"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -12,6 +12,7 @@ dependencies = [
     "click>=8.0",
     "nxviz",
     "pybbi",
+    "bioframe",
 ]
 
 [project.scripts]

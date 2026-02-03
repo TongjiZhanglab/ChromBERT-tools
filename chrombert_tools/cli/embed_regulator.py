@@ -128,7 +128,7 @@ def run(args, return_data=False):
         pickle.dump(reg_means, f)
     print("Finished!")  
     print("Saved mean regulator embeddings to pickle file:", out_pkl)
-    print("Saved regulator embeddings to hdf5 file:", f"{odir}/{args.oname}_region_aware.hdf5")
+    print("Region-aware regulator embeddings were saved to an HDF5 file:", f"{odir}/{args.oname}_region_aware.hdf5")
     
     if return_data:
         return reg_means, reg_emb_dict, overlap_bed

@@ -131,7 +131,7 @@ def make_acc_dataset(args,files_dict,acc_d_odir):
                 total_region_signal_sampled.to_csv(f'{acc_d_odir}/total_sampled.csv',index=False)
                 split_data(total_region_signal_sampled, "_sampled", acc_d_odir)
             else:
-                args.mode = 'normal'
+                args.mode = 'full'
                 split_data(total_region_signal, "", acc_d_odir)
             
             # 6.up region and nochange region
