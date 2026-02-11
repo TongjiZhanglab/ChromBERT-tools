@@ -76,10 +76,10 @@ Notebooks
 .. toctree::
    :maxdepth: 1
 
-   Infer regulator-regulator networks <examples/cli/infer_regulator_network>
-   Infer cell-type-specific regulator-regulator networks <examples/cli/infer_cell_regulator_network>
    Infer enhancer-promoter loops <examples/cli/infer_ep>
+   Infer regulator-regulator networks <examples/cli/infer_regulator_network>
    Impute cistromes <examples/cli/impute_cistrome>
+   Infer cell-type-specific key regulators <examples/cli/infer_cell_key_regulator>
    Find driver factors in cell-state transitions <examples/cli/find_driver_in_transition>
    Find context-specific cofactors in different regions <examples/cli/find_context_specific_cofactor>
 
