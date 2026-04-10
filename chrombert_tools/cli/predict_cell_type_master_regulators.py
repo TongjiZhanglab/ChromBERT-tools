@@ -6,7 +6,7 @@ from types import SimpleNamespace
 from .utils import resolve_paths, check_files
 from .utils_embed import build_cell_model_emb
 from .utils_interpret import build_interpret_config
-from .interpret_regulator_effects_between_regions_groups import regulator_effects_rank
+from .interpret_regulator_effects_between_region_groups import regulator_effects_rank
 
 
 def run(args):
@@ -55,7 +55,7 @@ def run(args):
     emb_odir = f"{odir}/emb"; os.makedirs(emb_odir, exist_ok=True)
 
     print("Step 1/3: Building or loading a cell-specific model...")
-    model_emb = build_cell_model_emb(args, files_dict, odir)
+    model_emb, _ = build_cell_model_emb(args, files_dict, odir)
 
     print("Step 2/3: Preparing region groups for interpretation...")
     data_config, _ = build_interpret_config(
@@ -83,7 +83,7 @@ def run(args):
 
 
 @click.command(
-    name="find_cell_key_regulator",
+    name="predict_cell_type_master_regulators",
     context_settings={"help_option_names": ["-h", "--help"]},
 )
 @click.option(
@@ -170,7 +170,7 @@ def run(args):
         "annotations, checkpoints, and reference embeddings."
     ),
 )
-def find_cell_key_regulator(
+def predict_cell_type_master_regulators(
     cell_type_bw,
     cell_type_peak,
     ft_ckpt,
@@ -211,4 +211,4 @@ def find_cell_key_regulator(
 
 
 if __name__ == "__main__":
-    find_cell_key_regulator()
+    predict_cell_type_master_regulators()

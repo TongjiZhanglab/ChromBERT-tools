@@ -434,7 +434,7 @@ def run(args):
 
 
 @click.command(
-    name="predict_region_activity_regression",
+    name="region_activity_regression",
     context_settings={"help_option_names": ["-h", "--help"]},
 )
 @click.option(
@@ -547,7 +547,7 @@ def run(args):
     type=int,
     help="Batch size.",
 )
-def predict_region_activity_regression(
+def region_activity_regression(
     acc_peak1,
     acc_peak2,
     acc_signal1,
@@ -592,4 +592,4 @@ def predict_region_activity_regression(
 
 
 if __name__ == "__main__":
-    predict_region_activity_regression()
+    region_activity_regression()

@@ -3,12 +3,15 @@ import click
 from types import SimpleNamespace
 
 import pandas as pd
-
+import numpy as np
+from .embed_region import embed_region_processed
 from .utils import resolve_paths, check_files, check_region_file, chrom_to_int_series
 from .utils_interpret import (
+    build_interpret_config,
+    load_interpret_model,
     cal_sim_tss_region_pairs,
     cross_region_set_cosine_pairs,
-    load_union_region_embeddings,
+    
 )
 
 
@@ -24,6 +27,34 @@ def _normalize_chrom_int(df: pd.DataFrame, genome: str, col: str = "chrom") -> p
     out[col] = out[col].astype(int)
     return out
 
+def get_union_embeddings(args, files_dict, sup_file, union_idx):
+    odir = args.odir
+    oname = getattr(args, "oname", "region_emb")
+    chrombert_region_emb_file = files_dict["region_emb_npy"]
+    if args.ft_ckpt is None:
+        if chrombert_region_emb_file is not None:
+            region_embs, _ = embed_region_processed(
+                emb_npy_file=chrombert_region_emb_file,
+                overlap_idx=union_idx,
+                odir=odir,
+                oname=oname,
+            )
+        else:
+            data_config, model_config = build_interpret_config(args, files_dict, sup_file)
+            dl = data_config.init_dataloader(supervised_file=sup_file)
+            _, model_emb = load_interpret_model(model_config)
+            region_embs, _ = embed_region_processed(
+                dl=dl, model_emb=model_emb, odir=odir, oname=oname
+            )
+    else:
+        data_config, model_config = build_interpret_config(args, files_dict, sup_file)
+        dl = data_config.init_dataloader(supervised_file=sup_file)
+        _, model_emb = load_interpret_model(model_config)
+        region_embs, _ = embed_region_processed(
+            dl=dl, model_emb=model_emb, odir=odir, oname=oname
+        )
+
+    return region_embs
 
 def run(args, return_data=False):
     odir = args.odir
@@ -60,10 +91,10 @@ def run(args, return_data=False):
             .sort_values(by="build_region_index")
             .reset_index(drop=True)
         )
-
-        union_idx, region_embs = load_union_region_embeddings(
-            files_dict, model_input, odir, args, save_npy=True
-        )
+        sup_file = os.path.join(odir, "model_input.tsv")
+        model_input.to_csv(sup_file, sep="\t", index=False)
+        union_idx = model_input["build_region_index"].to_numpy(dtype=np.int64)
+        region_embs = get_union_embeddings(args, files_dict, sup_file, union_idx)
 
         window = getattr(args, "distance_window", 250_000)
         pairs_cos = cal_sim_tss_region_pairs(
@@ -108,10 +139,10 @@ def run(args, return_data=False):
         .sort_values(by="build_region_index")
         .reset_index(drop=True)
     )
-
-    union_idx, region_embs = load_union_region_embeddings(
-        files_dict, model_input, odir, args, save_npy=True
-    )
+    sup_file = os.path.join(odir, "model_input.tsv")
+    model_input.to_csv(sup_file, sep="\t", index=False)
+    union_idx = model_input["build_region_index"].to_numpy(dtype=np.int64)
+    region_embs = get_union_embeddings(args, files_dict, sup_file, union_idx)
 
     window = getattr(args, "distance_window", 250_000)
     pairs_cos = cross_region_set_cosine_pairs(

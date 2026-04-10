@@ -6,9 +6,9 @@ from types import SimpleNamespace
 import pandas as pd
 
 from .utils import resolve_paths, check_files, check_region_file
-from .predict_region_activity_regression import make_acc_dataset, load_train_model_acc, _semicolon_paths
-from .predict_gene_expression import make_exp_dataset, load_train_model_gep
-from .interpret_regulator_effects_between_regions_groups import regulator_effects_rank
+from .region_activity_regression import make_acc_dataset, load_train_model_acc, _semicolon_paths
+from .gene_activity_repression import make_exp_dataset, load_train_model_gep
+from .interpret_regulator_effects_between_region_groups import regulator_effects_rank
 
 
 
@@ -150,7 +150,7 @@ def run(args):
 
 
 @click.command(
-    name="find_driver_in_transition",
+    name="predict_transition_driver_regulators",
     context_settings={"help_option_names": ["-h", "--help"]},
 )
 @click.option(
@@ -287,7 +287,7 @@ def run(args):
     type=int,
     help="Batch size. Increase this value if you have sufficient GPU memory.",
 )
-def find_driver_in_transition(
+def predict_transition_driver_regulators(
     exp_tpm1,
     exp_tpm2,
     acc_peak1,
@@ -340,4 +340,4 @@ def find_driver_in_transition(
 
 
 if __name__ == "__main__":
-    find_driver_in_transition()
+    predict_transition_driver_regulators()

@@ -328,7 +328,7 @@ def run(args):
 # =========================
 
 @click.command(
-    name="predict_region_function_classification",
+    name="region_function_classification",
     context_settings={"help_option_names": ["-h", "--help"]},
 )
 @click.option(
@@ -406,7 +406,7 @@ def run(args):
     type=click.Path(file_okay=False),
     help="ChromBERT cache directory.",
 )
-def predict_region_function_classification(
+def region_function_classification(
     function_beds,
     function_modes,
     function_names,
@@ -444,7 +444,7 @@ def predict_region_function_classification(
 
 
 if __name__ == "__main__":
-    predict_region_function_classification()
+    region_function_classification()
 
 
 

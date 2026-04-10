@@ -16,10 +16,10 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 from .utils import resolve_paths, check_files, overlap_regulator_func, check_region_file
 from .utils_interpret import (
-    embed_pool_func,
     build_interpret_config,
     load_interpret_model,
 )
+from .embed_regulator import embed_regulator_processed_mean
 from .interpret_regulator_regulator_interactions import build_regulator_subnetwork
 
 
@@ -192,8 +192,10 @@ def run(args):
     _, model_emb = load_interpret_model(model_config)
 
     # 4) generate embeddings
-    embs_pool_region1, regulators = embed_pool_func(data_config, model_emb, region1_file, emb_odir, "region1")
-    embs_pool_region2, regulators = embed_pool_func(data_config, model_emb, region2_file, emb_odir, "region2")
+    dl1 = data_config.init_dataloader(supervised_file=region1_file)
+    dl2 = data_config.init_dataloader(supervised_file=region2_file)
+    embs_pool_region1, regulators = embed_regulator_processed_mean(dl1, model_emb, emb_odir, "region1")
+    embs_pool_region2, regulators = embed_regulator_processed_mean(dl2, model_emb, emb_odir, "region2")
 
     # 5) infer driver factor in different regions
     context_dependent_cofactor_analysis(

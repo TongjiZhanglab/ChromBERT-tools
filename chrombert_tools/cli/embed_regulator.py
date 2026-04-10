@@ -11,10 +11,10 @@ from .utils import (
 from .utils_embed import (
     is_cell_specific, 
     get_required_keys, 
-    build_dataloader, 
-    build_model_emb, 
     build_cell_model_emb, 
+    build_model_dataset_config,
     generate_regulator_embeddings,
+    generate_regulator_embeddings_only_mean
 )
 
 
@@ -56,19 +56,23 @@ def validate_args(args):
                 "For cell-specific embedding, provide either --ft-ckpt "
                 "or both --cell-type-bw and --cell-type-peak."
             )
+                        
+def embed_regulator_processed_mean(dl,model_emb,odir,oname):
+    reg_means, regulators = generate_regulator_embeddings_only_mean(dl, model_emb, odir, oname)
+    return reg_means, regulators
 
 def run_regulator_general(args, files_dict, odir, return_data=False):
     '''
     Generate regulator embeddings for pretrained model
     '''
     overlap_bed, regulator_idx_dict = prepare_region_and_regulator(args, files_dict, odir)
-    ds, dl = build_dataloader(
-        supervised_file=f"{odir}/model_input.tsv",
-        hdf5_file=files_dict["hdf5_file"],
-        batch_size=args.batch_size,
-        num_workers=args.num_workers,
+    sup = f"{odir}/model_input.tsv"
+    data_config, model_config = build_model_dataset_config(
+        args, files_dict, supervised_file_for_ignore_idx=sup
     )
-    model_emb = build_model_emb(args, files_dict)
+    model_emb = model_config.init_model().get_embedding_manager().cuda().bfloat16()
+    ds = data_config.init_dataset(supervised_file=sup)
+    dl = data_config.init_dataloader(batch_size=args.batch_size, supervised_file=sup)
     reg_means, reg_emb_dict = generate_regulator_embeddings(
         ds, dl, model_emb, overlap_bed, regulator_idx_dict, odir, args.oname, return_data
     )
@@ -82,13 +86,10 @@ def run_regulator_cell(args, files_dict, odir, return_data=False):
     Generate regulator embeddings for cell-type-specific model
     '''
     overlap_bed, regulator_idx_dict = prepare_region_and_regulator(args, files_dict, odir)
-    ds, dl = build_dataloader(
-        supervised_file=f"{odir}/model_input.tsv",
-        hdf5_file=files_dict["hdf5_file"],
-        batch_size=args.batch_size,
-        num_workers=args.num_workers,
-    )
-    model_emb = build_cell_model_emb(args, files_dict, odir)
+    model_emb, data_config = build_cell_model_emb(args, files_dict, odir)
+    sup = f"{odir}/model_input.tsv"
+    ds = data_config.init_dataset(supervised_file=sup)
+    dl = data_config.init_dataloader(batch_size=args.batch_size, supervised_file=sup)
     reg_means, reg_emb_dict = generate_regulator_embeddings(
         ds, dl, model_emb, overlap_bed, regulator_idx_dict, odir, args.oname, return_data
     )
@@ -165,6 +166,16 @@ def run(args, return_data=False):
               type=click.Path(exists=True, dir_okay=False, readable=True),
               required=False, default=None, show_default=True,
               help="Fine-tuned checkpoint. If provided, use cell-specific model and skip fine-tuning.")
+# @click.option("--ignore-regulator", "ignore_regulator",
+#               type=str,
+#               required=False, default=None, show_default=True,
+#               help="Ignore regulator. Use ';' to separate multiple regulators.")
+# @click.option("--gep", "gep", is_flag=True, default=False, show_default=True,
+#               help="Use GEP model (multi-flank-window). Default: False.")
+# @click.option("--flank-window", "flank_window",
+#               type=int,
+#               required=False, default=4, show_default=True,
+#               help="Flank window size for gep model.")
 @click.option("--odir", default="./output", show_default=True,
               type=click.Path(file_okay=False), help="Output directory.")
 @click.option("--oname", default="regulator_emb", show_default=True,
@@ -190,6 +201,9 @@ def embed_regulator(
     cell_type_bw,
     cell_type_peak,
     ft_ckpt,
+    # ignore_regulator,
+    # gep,
+    # flank_window,
     odir,
     oname,
     genome,
@@ -209,6 +223,9 @@ def embed_regulator(
         cell_type_bw=cell_type_bw,
         cell_type_peak=cell_type_peak,
         ft_ckpt=ft_ckpt,
+        # ignore_regulator=ignore_regulator,
+        # gep=gep,
+        # flank_window=flank_window,
         odir=odir,
         oname=oname,
         genome=genome.lower(),

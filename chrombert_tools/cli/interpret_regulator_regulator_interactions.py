@@ -12,9 +12,9 @@ from .utils import resolve_paths, check_files
 from .utils import check_region_file, overlap_regulator_func
 from .utils_interpret import (
     build_interpret_config,
-    embed_pool_func,
     load_interpret_model,
 )
+from .embed_regulator import embed_regulator_processed_mean
 
 
 def plot_regulator_subnetwork(G: nx.Graph, target_reg: str, odir: str, k_hop: int, threshold: float, quantile: float, return_fig=False):
@@ -128,15 +128,15 @@ def run(args, return_data=False):
         args, files_dict, sup_file
     )
     _, model_emb = load_interpret_model(model_config)
-
+    dl = data_config.init_dataloader(supervised_file=sup_file)
     emb_odir = os.path.join(odir, "emb")
     os.makedirs(emb_odir, exist_ok=True)
-    embs_pool, regulators = embed_pool_func(
-        data_config, model_emb, sup_file, emb_odir, "region"
+    embs_pool, regulators = embed_regulator_processed_mean(
+        dl, model_emb, emb_odir, "region"
     )
 
     # Build TRN graph by cosine similarity quantile threshold
-    G, threshold, _, df_edges = build_regulator_subnetwork(embs_pool, regulators, odir, quantile=args.quantile)
+    G, threshold, cos_sim_df, df_edges = build_regulator_subnetwork(embs_pool, regulators, odir, quantile=args.quantile)
 
     # Optional: plot subnetworks for user-specified regulators
     if focus_regs is not None:
@@ -151,7 +151,7 @@ def run(args, return_data=False):
     print(f"Regulator cosine similarity saved to: {odir}/regulator_cosine_similarity.tsv")
     print(f"Total graph edges saved to: {odir}/total_graph_edge_threshold{threshold:.3f}_quantile{args.quantile:.3f}.tsv")
     if return_data:
-        return df_edges
+        return cos_sim_df,df_edges
 
 
 @click.command(name="interpret_regulator_regulator_interactions", context_settings={"help_option_names": ["-h", "--help"]})

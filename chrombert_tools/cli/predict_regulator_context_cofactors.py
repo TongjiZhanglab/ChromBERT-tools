@@ -9,8 +9,8 @@ import pandas as pd
 
 from .utils import resolve_paths, check_files, overlap_regulator_func
 from .utils_classfication import prepare_dataset, validate_args
-from .utils_interpret import embed_pool_func
-from .predict_region_function_classification import load_or_train_model
+from .embed_regulator import embed_regulator_processed_mean
+from .region_function_classification import load_or_train_model
 from .interpret_context_dependent_cofactor import context_dependent_cofactor_analysis
 
 
@@ -147,10 +147,10 @@ def run(args):
 
     embed_by_label = []
     for idx, region_file in enumerate(region_files):
-        embs_pool, regulators = embed_pool_func(
-            data_config,
+        tmp_dl = data_config.init_dataloader(supervised_file=region_file)
+        embs_pool, regulators = embed_regulator_processed_mean(
+            tmp_dl,
             model_emb,
-            region_file,
             emb_odir,
             f"region{idx}",
         )
@@ -179,7 +179,7 @@ def run(args):
 
 
 @click.command(
-    name="find_regulator_context_cofactors",
+    name="predict_regulator_context_cofactors",
     context_settings={"help_option_names": ["-h", "--help"]},
 )
 @click.option(
@@ -307,7 +307,7 @@ def run(args):
         "annotations, checkpoints, and metadata."
     ),
 )
-def find_regulator_context_cofactors(
+def predict_regulator_context_cofactors(
     function_beds,
     function_modes,
     function_names,
@@ -357,5 +357,5 @@ def find_regulator_context_cofactors(
 
 
 if __name__ == "__main__":
-    find_regulator_context_cofactors()
+    predict_regulator_context_cofactors()
     

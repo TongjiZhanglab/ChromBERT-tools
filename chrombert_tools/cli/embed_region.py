@@ -11,7 +11,13 @@ from .utils import (
     check_region_file,
     overlap_gene_map_region,
 )
-from .utils_embed import is_cell_specific, get_required_keys, build_dataloader, build_model_emb, build_cell_model_emb, generate_embeddings
+from .utils_embed import (
+    is_cell_specific, 
+    get_required_keys, 
+    build_cell_model_emb, 
+    generate_embeddings, 
+    build_model_dataset_config
+)
 
 # =========================
 # embed utils
@@ -57,6 +63,24 @@ def get_required_keys(args):
 # region embedding
 # =========================
 
+def embed_region_processed(dl=None,model_emb=None,odir=None,oname=None,emb_npy_file=None, overlap_idx = None):
+    
+    if emb_npy_file is not None:
+        all_embs = np.load(emb_npy_file)
+        assert overlap_idx is not None, "overlap_idx is required when emb_npy_file is provided"
+        region_embs = all_embs[overlap_idx]
+    else:
+        region_embs = generate_embeddings(dl, model_emb)
+        if odir is not None:
+            os.makedirs(odir, exist_ok=True)
+            stem = oname if oname is not None else "region_emb"
+            np.save(f"{odir}/{stem}.npy", region_embs)
+    mean_region_embs = region_embs.mean(axis=0)
+    if odir is not None:
+        stem = oname if oname is not None else ""
+        np.save(f"{odir}/mean_{stem}.npy", mean_region_embs)
+    return region_embs,mean_region_embs
+    
 def run_region_general(args, files_dict, odir, return_data=False,model_emb=None):
     '''
     Generate region embeddings for general model
@@ -68,19 +92,19 @@ def run_region_general(args, files_dict, odir, return_data=False,model_emb=None)
 
     emb_npy_path = files_dict["region_emb_npy"]
 
-    if os.path.exists(emb_npy_path):
+    if os.path.exists(emb_npy_path) and getattr(args, "ignore_regulator", None) is None:
         print("Using cached region embeddings...")
         all_emb = np.load(emb_npy_path)
         region_embs = all_emb[overlap_idx]
     else:
         print("Cached region embeddings not found, computing by model...")
-        ds, dl = build_dataloader(
-            supervised_file=f"{odir}/model_input.tsv",
-            hdf5_file=files_dict["hdf5_file"],
-            batch_size=args.batch_size,
+        sup = f"{odir}/model_input.tsv"
+        data_config, model_config = build_model_dataset_config(
+            args, files_dict, supervised_file_for_ignore_idx=sup
         )
+        dl = data_config.init_dataloader(batch_size=args.batch_size, supervised_file=sup)
         if model_emb is None:
-            model_emb = build_model_emb(args,files_dict)
+            model_emb = model_config.init_model().get_embedding_manager().cuda().bfloat16()
         region_embs = generate_embeddings(dl, model_emb)
 
     np.save(f"{odir}/region_emb_{args.oname}.npy", region_embs)
@@ -96,13 +120,13 @@ def run_region_cell(args, files_dict, odir, return_data=False, model_emb=None):
     overlap_bed = check_region_file(focus_region, files_dict, odir)
 
     if model_emb is None:
-        model_emb = build_cell_model_emb(args, files_dict, odir)
+        model_emb, _ = build_cell_model_emb(args, files_dict, odir)
 
-    _, dl = build_dataloader(
-        supervised_file=f"{odir}/model_input.tsv",
-        hdf5_file=files_dict["hdf5_file"],
-        batch_size=args.batch_size,
+    sup = f"{odir}/model_input.tsv"
+    data_config, _ = build_model_dataset_config(
+        args, files_dict, supervised_file_for_ignore_idx=sup
     )
+    dl = data_config.init_dataloader(batch_size=args.batch_size, supervised_file=sup)
     region_embs = generate_embeddings(dl, model_emb)
 
     np.save(f"{odir}/region_emb_{args.oname}.npy", region_embs)
@@ -187,7 +211,7 @@ def run_gene_general(args, files_dict, odir, return_data=False,model_emb=None):
 
     emb_npy_path = files_dict["region_emb_npy"]
 
-    if os.path.exists(emb_npy_path):
+    if os.path.exists(emb_npy_path) and getattr(args, "ignore_regulator", None) is None:
         print("Using cached region embeddings for gene pooling...")
         all_emb = np.load(emb_npy_path)
         gene_emb_dict = {}
@@ -196,13 +220,13 @@ def run_gene_general(args, files_dict, odir, return_data=False,model_emb=None):
             gene_emb_dict[g] = all_emb[idxs].mean(axis=0)
     else:
         print("Cached region embeddings not found, computing by model...")
-        ds, dl = build_dataloader(
-            supervised_file=f"{odir}/model_input_gene.tsv",
-            hdf5_file=files_dict["hdf5_file"],
-            batch_size=args.batch_size,
+        sup = f"{odir}/model_input_gene.tsv"
+        data_config, model_config = build_model_dataset_config(
+            args, files_dict, supervised_file_for_ignore_idx=sup
         )
+        dl = data_config.init_dataloader(batch_size=args.batch_size, supervised_file=sup)
         if model_emb is None:
-            model_emb = build_model_emb(args,files_dict)
+            model_emb = model_config.init_model().get_embedding_manager().cuda().bfloat16()
         region_embs = generate_embeddings(dl, model_emb)
         gene_emb_dict = pool_gene_embeddings(
             region_embs,
@@ -221,14 +245,14 @@ def run_gene_general(args, files_dict, odir, return_data=False,model_emb=None):
 def run_gene_cell(args, files_dict, odir, return_data=False, model_emb=None):
     info = prepare_gene_regions(args, files_dict, odir)
 
+    sup = f"{odir}/model_input_gene.tsv"
     if model_emb is None:
-        model_emb = build_cell_model_emb(args, files_dict, odir)
-
-    _, dl = build_dataloader(
-        supervised_file=f"{odir}/model_input_gene.tsv",
-        hdf5_file=files_dict["hdf5_file"],
-        batch_size=args.batch_size,
-    )
+        model_emb, data_config = build_cell_model_emb(args, files_dict, odir)
+    else:
+        data_config, _ = build_model_dataset_config(
+            args, files_dict, supervised_file_for_ignore_idx=sup
+        )
+    dl = data_config.init_dataloader(batch_size=args.batch_size, supervised_file=sup)
     region_embs = generate_embeddings(dl, model_emb)
 
     gene_emb_dict = pool_gene_embeddings(
@@ -321,6 +345,16 @@ def report_gene(args, odir, info, cell_specific=False):
               type=click.Choice(["fast", "full"], case_sensitive=False),
               help="Used when training cell-specific model.")
 @click.option("--batch-size", default=4, show_default=True, type=int)
+# @click.option("--ignore-regulator", "ignore_regulator",
+#               type=str,
+#               required=False, default=None, show_default=True,
+#               help="Ignore regulator. Use ';' to separate multiple regulators.")
+# @click.option("--gep", "gep", is_flag=True, default=False, show_default=True,
+#               help="Use GEP model (multi-flank-window). Default: False.")
+# @click.option("--flank-window", "flank_window",
+#               type=int,
+#               required=False, default=4, show_default=True,
+#               help="Flank window size for gep model.")
 @click.option("--chrombert-cache-dir", default="~/.cache/chrombert/data",
               show_default=True, type=click.Path(file_okay=False))
 @click.option("--chrombert-region-file", default=None,
@@ -335,6 +369,9 @@ def embed_region(
     cell_type_bw,
     cell_type_peak,
     ft_ckpt,
+    # ignore_regulator,
+    # gep,
+    # flank_window,
     odir,
     oname,
     genome,
@@ -355,6 +392,9 @@ def embed_region(
         cell_type_bw=cell_type_bw,
         cell_type_peak=cell_type_peak,
         ft_ckpt=ft_ckpt,
+        # ignore_regulator=ignore_regulator,
+        # gep=gep,
+        # flank_window=flank_window,
         odir=odir,
         oname=oname,
         genome=genome,
@@ -376,7 +416,7 @@ def embed_region(
     cell_mode = is_cell_specific(args)
 
     if cell_mode:
-        model_emb = build_cell_model_emb(args, files_dict, odir)
+        model_emb, _ = build_cell_model_emb(args, files_dict, odir)
         if args.region is not None:
             run_region_cell(args, files_dict, odir, model_emb=model_emb)
         if args.gene is not None:

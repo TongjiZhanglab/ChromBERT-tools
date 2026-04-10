@@ -4,20 +4,22 @@ from types import SimpleNamespace
 from .utils import resolve_paths, check_files
 from .utils import factor_rank, check_region_file
 from .utils_interpret import (
-    embed_pool_func,
     build_interpret_config,
     load_interpret_model,
 )
+from .embed_regulator import embed_regulator_processed_mean
 
 
 
 def regulator_effects_rank(data_config,model_emb,region1_file,region2_file,emb_odir,results_odir):
-    embs_pool_region1, regulators = embed_pool_func(data_config, model_emb, region1_file, emb_odir, "region1")
-    embs_pool_region2, regulators = embed_pool_func(data_config, model_emb, region2_file, emb_odir, "region2")
+    dl1 = data_config.init_dataloader(supervised_file=region1_file)
+    dl2 = data_config.init_dataloader(supervised_file=region2_file)
+    embs_pool_region1, regulators = embed_regulator_processed_mean(dl1, model_emb, emb_odir, "region1")
+    embs_pool_region2, regulators = embed_regulator_processed_mean(dl2, model_emb, emb_odir, "region2")
     cos_sim_df = factor_rank(embs_pool_region1, embs_pool_region2, regulators, results_odir)
     return cos_sim_df
 
-def run(args):
+def run(args, return_data=True):
     odir = args.odir
     os.makedirs(odir, exist_ok=True)
 
@@ -63,8 +65,12 @@ def run(args):
         print(f"Used pre-trained ChromBERT")
     print(f"Key regulators across regions saved to: {results_odir}/factor_importance_rank.csv")
 
+    if return_data:
+        return cos_sim_df
+    return None
 
-@click.command(name="interpret_regulator_effects_between_regions_groups", context_settings={"help_option_names": ["-h", "--help"]})
+
+@click.command(name="interpret_regulator_effects_between_region_groups", context_settings={"help_option_names": ["-h", "--help"]})
 @click.option("--region1-file", "region1_file",
               type=click.Path(exists=True, dir_okay=False, readable=True),
               required=True, help="Region 1 file.")
@@ -101,7 +107,7 @@ def run(args):
               help="ChromBERT cache directory (contains config/ anno/ checkpoint/ etc).")
 
 
-def interpret_regulator_effects_between_regions_groups(region1_file, region2_file, ft_ckpt, ignore_regulator, gep, flank_window, genome, resolution, odir, batch_size,
+def interpret_regulator_effects_between_region_groups(region1_file, region2_file, ft_ckpt, ignore_regulator, gep, flank_window, genome, resolution, odir, batch_size,
                    chrombert_cache_dir):
     '''
     Identify regulators that differ between two region sets via embedding shift.
@@ -119,8 +125,8 @@ def interpret_regulator_effects_between_regions_groups(region1_file, region2_fil
         batch_size=batch_size,
         chrombert_cache_dir=chrombert_cache_dir,
     )
-    run(args)
+    run(args, return_data=False)
 
 
 if __name__ == "__main__":
-    interpret_regulator_effects_between_regions_groups()
+    interpret_regulator_effects_between_region_groups()

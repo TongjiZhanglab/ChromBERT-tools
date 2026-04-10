@@ -49,31 +49,30 @@ from .utils import check_region_file
 from . import (
     embed_region,
     embed_regulator,
-    predict_region_function_classification,
-    predict_region_activity_regression,
-    predict_gene_expression,
+    region_function_classification,
+    region_activity_regression,
+    gene_activity_repression,
     interpret_region_region_interactions,
     interpret_regulator_regulator_interactions,
-    interpret_regulator_effects_between_regions_groups,
-    find_dirver_in_transition,
-    find_cell_key_regulator,
-    find_regulator_context_cofactors,
-    impute_cistrome
+    interpret_regulator_effects_between_region_groups,
+    predict_transition_driver_regulators,
+    predict_cell_type_master_regulators,
+    predict_regulator_context_cofactors,
+    predict_tf_binding_regions
 )
 
 # Register all subcommands
 cli.add_command(embed_region.embed_region)
 cli.add_command(embed_regulator.embed_regulator)
 
-cli.add_command(predict_region_function_classification.predict_region_function_classification)
-cli.add_command(predict_region_activity_regression.predict_region_activity_regression)
-cli.add_command(predict_gene_expression.predict_gene_expression)
+cli.add_command(region_function_classification.region_function_classification)
+cli.add_command(region_activity_regression.region_activity_regression)
+cli.add_command(gene_activity_repression.gene_activity_repression)
 
 cli.add_command(interpret_region_region_interactions.interpret_region_region_interactions)
 cli.add_command(interpret_regulator_regulator_interactions.interpret_regulator_regulator_interactions)
-cli.add_command(interpret_regulator_effects_between_regions_groups.interpret_regulator_effects_between_regions_groups)
-
-cli.add_command(find_dirver_in_transition.find_driver_in_transition)
-cli.add_command(find_cell_key_regulator.find_cell_key_regulator)
-cli.add_command(find_regulator_context_cofactors.find_regulator_context_cofactors)
-cli.add_command(impute_cistrome.impute_cistrome)
+cli.add_command(interpret_regulator_effects_between_region_groups.interpret_regulator_effects_between_region_groups)
+cli.add_command(predict_transition_driver_regulators.predict_transition_driver_regulators)
+cli.add_command(predict_cell_type_master_regulators.predict_cell_type_master_regulators)
+cli.add_command(predict_regulator_context_cofactors.predict_regulator_context_cofactors)
+cli.add_command(predict_tf_binding_regions.predict_tf_binding_regions)
