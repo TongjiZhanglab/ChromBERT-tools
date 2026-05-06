@@ -4,7 +4,7 @@
 import warnings
 warnings.filterwarnings('ignore', category=UserWarning, module='nxviz')
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 
 from .cli import check_region_file, umap_plot, resolve_paths
@@ -18,7 +18,7 @@ from .api.interpret_regulator_effects_between_region_groups import (
 )
 from .api.region_function_classification import region_function_classification
 from .api.region_activity_regression import region_activity_regression
-from .api.gene_activity_repression import gene_activity_repression
+from .api.gene_activity_regression import gene_activity_regression
 from .cli.embed_run_result import ChrombertEmbedRegulatorRunResult, ChrombertEmbedRunResult
 from .cli.prediction_run_result import ChrombertPredictionRunResult
 
@@ -32,5 +32,5 @@ __all__ = [
     "interpret_regulator_effects_between_region_groups",
     "region_function_classification",
     "region_activity_regression",
-    "gene_activity_repression",
+    "gene_activity_regression",
 ]

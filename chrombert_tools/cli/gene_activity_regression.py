@@ -433,7 +433,7 @@ def run(args):
     )
 
 @click.command(
-    name="gene_activity_repression",
+    name="gene_activity_regression",
     context_settings={"help_option_names": ["-h", "--help"]},
 )
 @click.option(
@@ -526,7 +526,7 @@ def run(args):
     type=int,
     help="Flank window size for gene expression prediction.",
 )
-def gene_activity_repression(
+def gene_activity_regression(
     exp_tpm1,
     exp_tpm2,
     direction,
@@ -565,4 +565,4 @@ def gene_activity_repression(
 
 
 if __name__ == "__main__":
-    gene_activity_repression()
+    gene_activity_regression()

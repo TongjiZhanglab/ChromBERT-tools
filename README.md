@@ -61,14 +61,14 @@ pip install /path/to/flash_attn-*.whl  # Replace this with your downloaded wheel
 
 
 ## 2. Download required resources
-### Use the Apptainer image
+### With the Apptainer image
 ```bash
 # Download ChromBERT pre-trained model files to ~/.cache/chrombert/data.
 apptainer exec /path/to/chrombert-tools.sif download-data --genome hg38 --resolution 1kb
 # If Hugging Face is slow, specify a mirror endpoint.
 apptainer exec /path/to/chrombert-tools.sif download-data --genome hg38 --resolution 1kb --hf-endpoint <Hugging Face endpoint>
 ```
-### Install from source
+### With a source install
 ```bash
 conda activate ChromBERT
 # Download required ChromBERT resources.

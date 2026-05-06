@@ -52,7 +52,7 @@ from . import (
     embed_regulator,
     region_function_classification,
     region_activity_regression,
-    gene_activity_repression,
+    gene_activity_regression,
     interpret_region_region_interactions,
     interpret_regulator_regulator_interactions,
     interpret_regulator_effects_between_region_groups,
@@ -68,7 +68,7 @@ cli.add_command(embed_regulator.embed_regulator)
 
 cli.add_command(region_function_classification.region_function_classification)
 cli.add_command(region_activity_regression.region_activity_regression)
-cli.add_command(gene_activity_repression.gene_activity_repression)
+cli.add_command(gene_activity_regression.gene_activity_regression)
 
 cli.add_command(interpret_region_region_interactions.interpret_region_region_interactions)
 cli.add_command(interpret_regulator_regulator_interactions.interpret_regulator_regulator_interactions)

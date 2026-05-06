@@ -7,11 +7,11 @@ import os
 from types import SimpleNamespace
 from typing import Optional
 
-from ..cli.gene_activity_repression import run as _cli_run
+from ..cli.gene_activity_regression import run as _cli_run
 from ..cli.prediction_run_result import ChrombertPredictionRunResult
 
 
-def gene_activity_repression(
+def gene_activity_regression(
     exp_tpm1: Optional[str] = None,
     exp_tpm2: Optional[str] = None,
     direction: str = "2-1",
@@ -33,7 +33,7 @@ def gene_activity_repression(
     meta_file: Optional[str] = None,
 ) -> ChrombertPredictionRunResult:
     """
-    Same pipeline as ``chrombert-tools gene_activity_repression``.
+    Same pipeline as ``chrombert-tools gene_activity_regression``.
 
     Returns:
         :class:`~chrombert_tools.prediction_run_result.ChrombertPredictionRunResult`

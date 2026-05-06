@@ -7,7 +7,7 @@ import pandas as pd
 
 from .utils import resolve_paths, check_files, check_region_file
 from .region_activity_regression import make_acc_dataset, load_train_model_acc, _semicolon_paths
-from .gene_activity_repression import make_exp_dataset, load_train_model_gep
+from .gene_activity_regression import make_exp_dataset, load_train_model_gep
 from .interpret_regulator_effects_between_region_groups import regulator_effects_rank
 
 
