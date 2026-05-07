@@ -141,8 +141,6 @@ region–region interpretation into a single analysis pipeline.
 
 Tutorial notebook:
 
-* :doc:`Infer cell-type-specific enhancer–promoter interactions <examples/api/infer_cell_type_specific_ep_interactions>`
-
 .. toctree::
    :maxdepth: 1
    :hidden:
