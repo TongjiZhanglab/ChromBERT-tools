@@ -2,7 +2,11 @@
 
 > **ChromBERT** is a pre-trained foundation model designed to capture genome-wide co-association patterns of ~1,000 transcription regulators and to learn context-specific transcriptional regulatory networks (TRNs) [ChromBERT](https://github.com/TongjiZhanglab/ChromBERT).  
 
-> **ChromBERT-tools** is a lightweight toolkit built upon ChromBERT that operationalizes context-specific regulatory representations for user data through modular command-line interfaces and Python APIs organized into three functional layers: representation generation, predictive modeling, and regulatory interpretation.
+> **ChromBERT-tools** is a lightweight toolkit built upon ChromBERT that operationalizes context-specific regulatory representations for user data through modular command-line interfaces and Python APIs organized into three functional layers: representation generation, predictive modeling, and regulatory interpretation. 
+
+A short video tutorial is available to introduce ChromBERT-tools, including installation and a representative example workflow.
+
+**Watch on:** [YouTube](https://youtu.be/u7BJcd-o-o8?si=db5svD167kkfPfcP) | [Bilibili](https://www.bilibili.com/video/BV1QdRQBME6d/?share_source=copy_web&vd_source=ef1be9aca5c89f390ed380e18e1c7dc8)
 
 ![ChromBERT-tools Framework](docs/_static/figure1_new.png)
 
@@ -18,7 +22,7 @@ We provide two installation options.
 # Install Apptainer.
 conda install -c conda-forge apptainer
 # Pull the official image.
-apptainer pull chrombert-tools.sif oras://docker.io/chenqianqian515/chrombert-tools:20260505
+apptainer pull chrombert-tools.sif oras://docker.io/chenqianqian515/chrombert-tools:20260509
 # Check installation.
 apptainer exec /path/to/chrombert-tools.sif chrombert-tools -h
 ```
@@ -70,6 +74,7 @@ apptainer exec /path/to/chrombert-tools.sif download-data --genome hg38 --resolu
 ```
 ### With a source install
 ```bash
+# Activate the conda environment above command.
 conda activate ChromBERT
 # Download required ChromBERT resources.
 download-data --genome hg38 --resolution 1kb
